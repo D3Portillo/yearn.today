@@ -1,6 +1,7 @@
 import { Fragment } from "react"
 import Head from "next/head"
 import Image from "next/image"
+import { FaChevronRight } from "react-icons/fa"
 
 import asset_logo from "@/assets/logo.svg"
 
@@ -19,7 +20,69 @@ export default function Home() {
             Connect
           </button>
         </nav>
+        <section className="p-6 bg-zinc-50 rounded-xl mt-8">
+          <h2 className="text-2xl font-bold mt-1 mb-2">Stable Opportunities</h2>
+          <p>Invest on USDC vaults to earn constant rewards.</p>
+          <table className="w-full mt-8">
+            <thead>
+              <tr className="text-left">
+                <th colSpan={2}>Vault</th>
+                <th className="p-2">TVL</th>
+                <th className="p-2">Your deposit</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <Vault />
+              <Vault />
+              <Vault />
+              <Vault />
+              <Vault />
+            </tbody>
+          </table>
+        </section>
       </main>
+      <footer
+        aria-label="Site Footer"
+        className="px-4 mt-32 max-w-screen-xl mx-auto"
+      >
+        <div>
+          <Image height={32} src={asset_logo} alt="yearn.today logo" />
+          <p className="text-xs max-w-sm mt-2">
+            yearn.today is an independent tool for the yearn.finance ecosystem.
+            <br />
+            We implement their smart contracts and sdk{"'"}s to provide an
+            enhnaced overview to token holders.
+          </p>
+        </div>
+        <div className="py-4 mt-4 border-t">2022 ― Nullius in verba</div>
+      </footer>
     </Fragment>
+  )
+}
+
+function Vault() {
+  return (
+    <tr className="border-t border-zinc-100">
+      <td className="p-2 w-12">
+        <Image
+          alt=""
+          width={42}
+          height={42}
+          src="https://raw.githubusercontent.com/yearn/yearn-assets/master/icons/multichain-tokens/1/0xdf55670e27bE5cDE7228dD0A6849181891c9ebA1/logo-128.png"
+        />
+      </td>
+      <td className="px-2 py-4">USDC/AAVE</td>
+      <td className="px-2 py-4">$3233K USD</td>
+      <td className="px-2 py-4">$32 USD</td>
+      <td className="text-right">
+        <button className="bg-black py-2 text-lg px-6 rounded-full text-white">
+          Deposit
+        </button>
+        <button className="p-4 ml-2 hover:bg-zinc-100 group rounded-full">
+          <FaChevronRight className="text-xl group-hover:translate-x-px" />
+        </button>
+      </td>
+    </tr>
   )
 }
