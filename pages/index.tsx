@@ -1,10 +1,15 @@
 import { Fragment } from "react"
 import Head from "next/head"
+import dynamic from "next/dynamic"
 
-import Navigation from "@/components/Navigation"
+import { LoadingState } from "@/components/Navigation"
 import Section from "@/components/layout/Section"
 import Footer from "@/components/Footer"
 import VaultList from "@/components/VaultList"
+const Navigation = dynamic(() => import("@/components/Navigation"), {
+  ssr: false,
+  loading: () => <LoadingState />,
+})
 
 export default function Home() {
   return (
