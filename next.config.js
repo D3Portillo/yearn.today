@@ -4,7 +4,11 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ["raw.githubusercontent.com", "rawcdn.githack.com"],
+    domains: [
+      "raw.githubusercontent.com",
+      "rawcdn.githack.com",
+      "raw.githack.com",
+    ],
     minimumCacheTTL: 6000000,
   },
 }
