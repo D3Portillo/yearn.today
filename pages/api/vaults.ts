@@ -27,13 +27,13 @@ export default async function handler(_: NextApiRequest, res: NextApiResponse) {
 
   try {
     vaults = await (
-      await fetch("https://api.yearn.finance/v1/chains/1/vaults/all")
+      await fetch("https://ydaemon.yearn.finance/1/vaults/all")
     ).json()
 
     vaults = vaults
       .filter((vault) => {
         // Filter for only USDC-in vaults
-        return vault.symbol.includes("USDC")
+        return vault.symbol.includes("USDC") && vault.display_name
       })
       .map((vault) => {
         // search for icon(url) under token.icon else append default url
