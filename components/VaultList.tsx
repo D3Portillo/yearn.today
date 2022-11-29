@@ -1,15 +1,18 @@
+import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-
-import type { Vault } from "@/pages/api/vaults"
-import { useEffect, useState } from "react"
+import { utils } from "ethers"
+import { useAccount } from "wagmi"
 import { FaChevronRight } from "react-icons/fa"
+import type { Vault } from "@/pages/api/vaults"
 
 import ff from "@/lib/services/ff"
+import { useYearnClient } from "@/lib/yearn"
 import { formatCurreny } from "@/lib/currency"
 import CardContainer from "@/components/layout/CardContainer"
 
 function VaultList() {
+  const { address } = useAccount()
   const [list, setList] = useState<Vault[]>([])
 
   useEffect(() => {
@@ -32,7 +35,13 @@ function VaultList() {
         <tbody>
           {list.length === 0 && vaultLoadingItemsList}
           {list.map((vault) => {
-            return <Vault key={`vault-${vault.symbol}`} {...vault} />
+            return (
+              <Vault
+                key={`vault-${vault.symbol}`}
+                holderAddress={address!}
+                {...vault}
+              />
+            )
           })}
         </tbody>
       </table>
@@ -60,7 +69,36 @@ function VaultLoadingState() {
   )
 }
 
-function Vault({ display_name, symbol, tvl, icon }: Vault) {
+function Vault({
+  display_name,
+  tvl,
+  icon,
+  address,
+  holderAddress,
+}: Vault & {
+  holderAddress: string
+}) {
+  const [state, setState] = useState({ balance: 0 })
+  const asyncSetState = (newState: Partial<typeof state>) =>
+    setState((prev) => ({ ...prev, ...newState }))
+
+  const yearn = useYearnClient()
+  useEffect(() => {
+    if (yearn && holderAddress) {
+      yearn.vaults
+        .positionsOf(holderAddress, [address])
+        .then(([position]) => {
+          asyncSetState({
+            balance:
+              (utils.formatEther(position?.balance || 0) as any) * tvl.price,
+          })
+        })
+        .catch((error) => {
+          console.error({ error })
+        })
+    }
+  }, [holderAddress, yearn?.ready])
+
   return (
     <tr className="border-t border-zinc-100">
       <td className="p-2 w-12">
@@ -68,7 +106,9 @@ function Vault({ display_name, symbol, tvl, icon }: Vault) {
       </td>
       <td className="px-2 py-4">{display_name}</td>
       <td className="px-2 py-4">{formatCurreny(tvl.tvl)} USD</td>
-      <td className="px-2 py-4">$0.00 USD</td>
+      <td className="px-2 py-4">
+        {holderAddress ? `${formatCurreny(state.balance)} USD` : "-"}
+      </td>
       <td>
         <div className="flex justify-end items-center">
           <button className="bg-black py-2 text-lg px-6 rounded-full text-white">
