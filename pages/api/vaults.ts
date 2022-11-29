@@ -17,6 +17,9 @@ export type Vault = {
     gross_apr: number
     net_apy: number
   }
+  token: {
+    address: string
+  }
 }
 
 export default async function handler(_: NextApiRequest, res: NextApiResponse) {
