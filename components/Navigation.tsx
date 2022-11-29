@@ -6,6 +6,7 @@ import asset_logo from "@/assets/logo.svg"
 import { beautifyAddress } from "@/lib/helpers"
 import { useEmojiAvatar } from "@/lib/emojiAvatarForAddress"
 import Button from "./Button"
+import Link from "next/link"
 
 function Navigation() {
   const { isConnected } = useAccount()
@@ -14,7 +15,9 @@ function Navigation() {
 
   return (
     <nav className="h-24 flex items-center justify-between">
-      <Image height={32} src={asset_logo} alt="yearn.today logo" />
+      <Link title="Back to homepage" href="/">
+        <Image height={32} src={asset_logo} alt="yearn.today logo" />
+      </Link>
       {isConnected ? (
         <ProfileButton onClick={openAccountModal} />
       ) : (
@@ -48,7 +51,7 @@ function ProfileButton({ onClick }: { onClick: any }) {
 }
 
 export const LoadingState = () => (
-  <nav className="h-24 flex items-center justify-between">
+  <nav className="h-24 flex gap-4 items-center justify-between">
     <div className="w-12 h-12 rounded-lg bg-zinc-50 animate-pulse" />
     <div className="w-full max-w-sm h-10 bg-zinc-50 rounded-lg animate-pulse" />
   </nav>

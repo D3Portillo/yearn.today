@@ -1,11 +1,13 @@
 import Image from "next/image"
+import Link from "next/link"
 
 import { FaChevronRight } from "react-icons/fa"
+import CardContainer from "@/components/layout/CardContainer"
 
 function VaultList() {
   return (
-    <section className="p-6 border border-zinc-100 bg-zinc-50 rounded-xl mt-8">
-      <h2 className="text-2xl font-bold mt-1 mb-2">Stable Opportunities</h2>
+    <CardContainer className="mt-8">
+      <h2>Stable Opportunities</h2>
       <p>Invest on USDC vaults to earn constant rewards.</p>
       <table className="w-full mt-8">
         <thead>
@@ -24,7 +26,7 @@ function VaultList() {
           <Vault />
         </tbody>
       </table>
-    </section>
+    </CardContainer>
   )
 }
 
@@ -42,13 +44,18 @@ function Vault() {
       <td className="px-2 py-4">USDC/AAVE</td>
       <td className="px-2 py-4">$3233K USD</td>
       <td className="px-2 py-4">$32 USD</td>
-      <td className="text-right">
-        <button className="bg-black py-2 text-lg px-6 rounded-full text-white">
-          Deposit
-        </button>
-        <button className="p-4 ml-2 hover:bg-zinc-100 group rounded-full">
-          <FaChevronRight className="text-xl group-hover:translate-x-px" />
-        </button>
+      <td>
+        <div className="flex justify-end items-center">
+          <button className="bg-black py-2 text-lg px-6 rounded-full text-white">
+            Deposit
+          </button>
+          <Link
+            href="/vault/1"
+            className="p-4 ml-2 hover:bg-zinc-100 group rounded-full"
+          >
+            <FaChevronRight className="text-xl group-hover:translate-x-px" />
+          </Link>
+        </div>
       </td>
     </tr>
   )
