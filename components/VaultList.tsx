@@ -10,6 +10,7 @@ import ff from "@/lib/services/ff"
 import { useYearnClient } from "@/lib/yearn"
 import { formatCurreny } from "@/lib/currency"
 import CardContainer from "@/components/layout/CardContainer"
+import { useRouter } from "next/router"
 
 function VaultList() {
   const { address } = useAccount()
@@ -20,7 +21,7 @@ function VaultList() {
   }, [])
 
   return (
-    <CardContainer className="mt-8 min-h-[32rem]">
+    <CardContainer className="mt-8 min-h-[32rem] pb-12">
       <h2>Stable Opportunities</h2>
       <p>Invest on USDC vaults to earn constant rewards.</p>
       <table className="w-full mt-8">
@@ -28,7 +29,7 @@ function VaultList() {
           <tr className="text-left">
             <th colSpan={2}>Vault</th>
             <th className="p-2">TVL</th>
-            <th className="p-2">Your deposit</th>
+            <th className="p-2">Your investment</th>
             <th></th>
           </tr>
         </thead>
@@ -78,6 +79,7 @@ function Vault({
 }: Vault & {
   holderAddress: string
 }) {
+  const router = useRouter()
   const [state, setState] = useState({ balance: 0 })
   const asyncSetState = (newState: Partial<typeof state>) =>
     setState((prev) => ({ ...prev, ...newState }))
@@ -99,8 +101,20 @@ function Vault({
     }
   }, [holderAddress, yearn?.ready])
 
+  function handleRowClick() {
+    router.push({
+      pathname: "vault/[id]",
+      query: {
+        id: 42,
+      },
+    })
+  }
+
   return (
-    <tr className="border-t border-zinc-100">
+    <tr
+      onClick={handleRowClick}
+      className="border-t hover:bg-[rgba(0,0,0,0.022)] cursor-pointer border-zinc-100"
+    >
       <td className="p-2 w-12">
         <Image alt="" width={42} height={42} src={icon} />
       </td>
@@ -111,15 +125,20 @@ function Vault({
       </td>
       <td>
         <div className="flex justify-end items-center">
-          <button className="bg-black py-2 text-lg px-6 rounded-full text-white">
-            Deposit
-          </button>
-          <Link
-            href="/vault/1"
-            className="p-4 ml-2 hover:bg-zinc-100 group rounded-full"
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="flex items-center"
           >
-            <FaChevronRight className="text-xl group-hover:translate-x-px" />
-          </Link>
+            <button className="bg-black py-2 text-lg px-6 rounded-full text-white">
+              Deposit
+            </button>
+            <Link
+              href="/vault/1"
+              className="p-4 ml-2 hover:bg-zinc-100 group rounded-full"
+            >
+              <FaChevronRight className="text-xl group-hover:translate-x-px" />
+            </Link>
+          </div>
         </div>
       </td>
     </tr>
