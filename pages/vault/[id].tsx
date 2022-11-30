@@ -73,7 +73,7 @@ export default function VaultPage() {
             <div className="p-4 bg-white rounded-xl">
               <figure className="w-12 h-12">
                 <Image
-                  className="flex items-center justify-center"
+                  className="flex text-4xl items-center justify-center"
                   alt="💰"
                   src={vault.icon}
                   width={120}
