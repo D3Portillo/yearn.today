@@ -1,10 +1,33 @@
+import { useEffect, useState, type PropsWithChildren } from "react"
+import { useRouter } from "next/router"
+
+import { useYearnClient } from "@/lib/yearn"
 import CardContainer from "@/components/layout/CardContainer"
-import { Fragment, useState, type PropsWithChildren } from "react"
-import Button from "./Button"
+import Withdraw from "./Withdraw"
+import Deposit from "./Deposit"
 
 function WidgetInvestment() {
+  const router = useRouter()
+  const client = useYearnClient()
   const [showWithdraw, setShowWithdraw] = useState(false)
+  const [tokenAddress, setTokenAddress] = useState("")
+
+  const { id: vaultAddress } = router.query as { id: string }
   const toggleShowWithdraw = () => setShowWithdraw((show) => !show)
+
+  useEffect(() => {
+    if (client && vaultAddress) {
+      client.vaults.get([vaultAddress]).then(([vault]) => {
+        // Fetch for vault token
+        setTokenAddress(vault.token)
+      })
+    }
+  }, [client?.ready, vaultAddress])
+
+  const vault = {
+    tokenAddress,
+    vaultAddress,
+  }
 
   return (
     <CardContainer className="w-full max-w-sm">
@@ -17,7 +40,7 @@ function WidgetInvestment() {
         </TabButton>
       </nav>
       <section className="flex flex-col mt-4 gap-4">
-        {showWithdraw ? <Withdraw /> : <Deposit />}
+        {showWithdraw ? <Withdraw vault={vault} /> : <Deposit vault={vault} />}
       </section>
     </CardContainer>
   )
@@ -41,42 +64,6 @@ function TabButton({
         }`}
       />
     </button>
-  )
-}
-
-function Deposit() {
-  return (
-    <Fragment>
-      <input
-        placeholder="0.00"
-        type="text"
-        className="text-xl border rounded p-2 bg-transparent"
-      />
-      <div className="flex items-center gap-2 text-zinc-600">
-        <span className="font-bold">Balance:</span>
-        <span>0.00 USDC</span>
-      </div>
-      <Button fontSize="text-xl">Approve</Button>
-      <Button fontSize="text-xl">Confirm</Button>
-    </Fragment>
-  )
-}
-
-function Withdraw() {
-  return (
-    <Fragment>
-      <input
-        placeholder="0.00"
-        type="text"
-        className="text-xl border rounded p-2 bg-transparent"
-      />
-      <div className="flex items-center gap-2 text-zinc-600">
-        <span className="font-bold">Balance:</span>
-        <span>0.00 USDC</span>
-      </div>
-      <Button fontSize="text-xl">Approve</Button>
-      <Button fontSize="text-xl">Confirm</Button>
-    </Fragment>
   )
 }
 
