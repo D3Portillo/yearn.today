@@ -4,16 +4,18 @@ import toast from "react-hot-toast"
 
 import { withPreventDefault } from "@/lib/inputs"
 import { useAllowance, useBalance, useVault, useYearnClient } from "@/lib/yearn"
-import { parseWeiUSDC } from "@/lib/numbers"
+import { formatUSDC, parseWeiUSDC } from "@/lib/numbers"
 import Button from "@/components/Button"
-import { isGeneratorFunction } from "util/types"
+import { formatCurreny } from "@/lib/currency"
+
+const USDC_ADDR = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
 
 function Deposit({
   vault,
 }: {
   vault: { tokenAddress: string; vaultAddress: string }
 }) {
-  const { tokenAddress, vaultAddress } = vault
+  const { vaultAddress } = vault
 
   const [amount, setAmount] = useState("")
   const client = useYearnClient()
@@ -23,17 +25,18 @@ function Deposit({
     "deposit",
     address,
     vaultAddress,
-    tokenAddress
+    USDC_ADDR
   )
-  const balance = useBalance(address, tokenAddress)
+  const balance = useBalance(address, USDC_ADDR)
   const maxDeposit = yVault.metadata?.depositLimit
+  const nAmount = amount as any as number
 
   function handleApprove() {
     if (!address) return toast.error("You must connect to continue")
     else {
       let toaster = toast.loading("Working...")
       client.vaults
-        .approveDeposit(address, vaultAddress, tokenAddress, maxDeposit)
+        .approveDeposit(address, vaultAddress, USDC_ADDR, maxDeposit)
         .then(async (tx) => {
           await tx?.wait()
           toast.success("Tx Confirmed")
@@ -50,35 +53,41 @@ function Deposit({
 
   function handleConfirm() {
     if (!address) return toast.error("You must connect to continue")
-    if ((amount as any) > balance) {
+    if (nAmount > balance) {
       return toast.error("You don't own that much assets")
     }
-    if (amount) {
-      let toaster = toast.loading("Working...")
-      client.vaults
-        .deposit(vaultAddress, tokenAddress, parseWeiUSDC(amount), address)
-        .then(async (tx) => {
-          await tx?.wait()
-          toast.success("Yaaay!")
-        })
-        .catch((error) => {
-          toast.error("Oops something went wrong")
-          console.error({ error })
-        })
-        .finally(() => {
-          toast.dismiss(toaster)
-        })
-    }
+    let toaster = toast.loading("Working...")
+    client.vaults
+      .deposit(vaultAddress, USDC_ADDR, parseWeiUSDC(amount), address, {
+        slippage: 5,
+      })
+      .then(async (tx) => {
+        await tx?.wait()
+        toast.success("Yaaay!")
+      })
+      .catch((error) => {
+        toast.error("Oops something went wrong")
+        console.error({ error })
+      })
+      .finally(() => {
+        toast.dismiss(toaster)
+      })
   }
 
   const hideApproveButton = depositAllowance.amount
     ? (depositAllowance.amount as any) >= yVault.metadata?.depositLimit
     : true
 
+  function handleSubmit() {
+    if (hideApproveButton) {
+      handleConfirm()
+    } else handleApprove()
+  }
+
   return (
     <form
       className="flex flex-col mt-4 gap-4"
-      onSubmit={withPreventDefault(handleConfirm)}
+      onSubmit={withPreventDefault(handleSubmit)}
     >
       <input
         placeholder="0.00"
@@ -95,18 +104,28 @@ function Deposit({
         <span className="font-bold">Balance:</span>
         <span>{balance} USDC</span>
       </div>
-      <Button
-        onClick={(amount as any) > 0 ? handleApprove : undefined}
-        isDisabled={hideApproveButton}
-        fontSize="text-xl"
-      >
+      <Button isDisabled={hideApproveButton} fontSize="text-xl">
         Approve
       </Button>
-      <Button type="submit" isDisabled={!hideApproveButton} fontSize="text-xl">
+      <Button isDisabled={!hideApproveButton} fontSize="text-xl">
         Confirm
       </Button>
+      {nAmount > 0 && (
+        <div className="border border-dotted p-2 rounded-xl text-zinc-600">
+          <p className="text-sm text-center">
+            <span>⚡</span> You can earn{" "}
+            <strong className="text-yearn-blue">
+              {formatCurreny(
+                nAmount * formatUSDC(yVault.metadata?.pricePerShare)
+              )}
+            </strong>
+            /year with this investment
+          </p>
+        </div>
+      )}
     </form>
   )
 }
 
+function getInvestment() {}
 export default Deposit
