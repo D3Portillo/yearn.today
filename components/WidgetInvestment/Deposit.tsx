@@ -1,8 +1,7 @@
-import { Fragment, useEffect, useState } from "react"
+import { Fragment } from "react"
 import { useAccount } from "wagmi"
 
-import { formatUSDC } from "@/lib/numbers"
-import { useYearnClient } from "@/lib/yearn"
+import { useAllowance, useBalance, useVault, useYearnClient } from "@/lib/yearn"
 import Button from "@/components/Button"
 
 function Deposit({
@@ -10,23 +9,20 @@ function Deposit({
 }: {
   vault: { tokenAddress: string; vaultAddress: string }
 }) {
-  const client = useYearnClient()
-  const [balance, setBalance] = useState(0)
-  const { address: holderAddress } = useAccount()
+  const { tokenAddress, vaultAddress } = vault
 
-  const { tokenAddress } = vault
-  useEffect(() => {
-    if (client && holderAddress && tokenAddress) {
-      client.services.helper
-        .tokenBalances(holderAddress, [tokenAddress])
-        .then(([balance]) => {
-          if (balance) {
-            // Fetch for connected address balance for vault token
-            setBalance(formatUSDC(balance.balanceUsdc))
-          }
-        })
-    }
-  }, [client?.ready, holderAddress, tokenAddress])
+  const client = useYearnClient()
+  const yVault = useVault(vaultAddress)
+  const { address } = useAccount()
+  const depositAllowance = useAllowance(
+    "deposit",
+    address,
+    vaultAddress,
+    tokenAddress
+  )
+  const balance = useBalance(address, tokenAddress)
+
+  console.debug({ yVault, depositAllowance, balance })
 
   return (
     <Fragment>

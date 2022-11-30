@@ -1,14 +1,11 @@
-import type { Vault as VaultType } from "@/pages/api/vaults"
-import { useEffect } from "react"
+import type { Vault as TypeVault } from "@/pages/api/vaults"
 import Image from "next/image"
 import Link from "next/link"
-import { utils } from "ethers"
 import { FaChevronRight } from "react-icons/fa"
 
-import { useYearnClient } from "@/lib/yearn"
+import { useBalance } from "@/lib/yearn"
 import { formatCurreny } from "@/lib/currency"
 import { useRouter } from "next/router"
-import useAsyncState from "@/lib/hooks/useAsyncState"
 
 function Vault({
   name,
@@ -18,24 +15,12 @@ function Vault({
   holderAddress,
   onOpenModal,
   version,
-}: VaultType & {
+}: TypeVault & {
   holderAddress: string
   onOpenModal(): void
 }) {
   const router = useRouter()
-  const [vault, asyncSetVault] = useAsyncState({ balance: 0 })
-
-  const yearn = useYearnClient()
-  useEffect(() => {
-    if (yearn && holderAddress) {
-      yearn.vaults.positionsOf(holderAddress, [address]).then(([position]) => {
-        asyncSetVault({
-          balance:
-            (utils.formatEther(position?.balance || 0) as any) * tvl.price,
-        })
-      })
-    }
-  }, [holderAddress, yearn?.ready])
+  const holderInvestment = useBalance(holderAddress, address)
 
   function handleRowClick() {
     router.push({
@@ -58,7 +43,7 @@ function Vault({
       <td className="px-2 py-4">{version}</td>
       <td className="px-2 py-4">{formatCurreny(tvl.tvl)} USD</td>
       <td className="px-2 py-4">
-        {holderAddress ? `${formatCurreny(vault.balance)} USD` : "-"}
+        {holderAddress ? `${formatCurreny(holderInvestment)} USD` : "-"}
       </td>
       <td>
         <div className="flex justify-end items-center">

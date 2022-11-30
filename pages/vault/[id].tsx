@@ -9,7 +9,8 @@ import { FiArrowUpRight } from "react-icons/fi"
 import { formatCurreny } from "@/lib/currency"
 import { formatNumber, formatUSDC } from "@/lib/numbers"
 import useAsyncState from "@/lib/hooks/useAsyncState"
-import { useYearnClient } from "@/lib/yearn"
+import { useVault, useYearnClient } from "@/lib/yearn"
+
 import CardContainer from "@/components/layout/CardContainer"
 import MainLayout from "@/components/layout/MainLayout"
 import WidgetInvestment from "@/components/WidgetInvestment"
@@ -30,24 +31,22 @@ export default function VaultPage() {
   })
 
   const { id } = router.query as { id: string }
+  const yVault = useVault(id)
 
   useEffect(() => {
-    if (client && id) {
-      client.vaults.get([id]).then(([vault]) => {
-        console.debug({ vault })
-        asyncSetVault({
-          ...vault,
-          name: vault.name,
-          amountUsdc: (vault.underlyingTokenBalance.amountUsdc as any) / 1e6,
-          apy: formatNumber((vault.metadata.apy?.net_apy || 0) * 100),
-          icon: vault.metadata.displayIcon,
-        })
+    if (yVault.address) {
+      asyncSetVault({
+        ...yVault,
+        name: yVault.name,
+        amountUsdc: formatUSDC(yVault.underlyingTokenBalance.amountUsdc),
+        apy: formatNumber((yVault.metadata.apy?.net_apy || 0) * 100),
+        icon: yVault.metadata.displayIcon,
       })
     }
-  }, [client?.ready, id])
+  }, [yVault.address])
 
   useEffect(() => {
-    if (address && client && id) {
+    if (address && id) {
       client.vaults.positionsOf(address, [id]).then(([position]) => {
         if (position) {
           asyncSetVault({
@@ -58,7 +57,7 @@ export default function VaultPage() {
         }
       })
     }
-  }, [address, client?.ready, id])
+  }, [address, id])
 
   return (
     <MainLayout>
