@@ -1,4 +1,4 @@
-import type { TokenAllowance, Vault } from "@yfi/sdk"
+import type { TokenAllowance, TokenBalance, Vault } from "@yfi/sdk"
 import { useEffect, useState } from "react"
 import { useYearnContext } from "./contexts/Yearn"
 import { noOp } from "./helpers"
@@ -52,6 +52,29 @@ export const useAllowance = (
   return allowance
 }
 
+export const useRawTokenBalance = (
+  address: string | undefined,
+  tokenAddress: string
+) => {
+  const client = useYearnClient()
+  const [balance, setBalance] = useState({} as TokenBalance)
+
+  useEffect(() => {
+    if (address && tokenAddress) {
+      client.services.helper
+        .tokenBalances(address, [tokenAddress])
+        .then(([balance]) => {
+          if (balance) {
+            // Fetch for connected address balance for vault token
+            setBalance(balance)
+          }
+        })
+    }
+  }, [address, tokenAddress])
+
+  return balance
+}
+
 /**
  * Get balance for a token holder in USDC
  * @param address tokenHolder address
@@ -61,21 +84,14 @@ export const useBalance = (
   address: string | undefined,
   tokenAddress: string
 ) => {
-  const client = useYearnClient()
   const [balance, setBalance] = useState(0)
 
+  const tokenBalance = useRawTokenBalance(address, tokenAddress)
   useEffect(() => {
-    if (address && tokenAddress) {
-      client.services.helper
-        .tokenBalances(address, [tokenAddress])
-        .then(([balance]) => {
-          if (balance) {
-            // Fetch for connected address balance for vault token
-            setBalance(formatUSDC(balance.balanceUsdc))
-          }
-        })
+    if (tokenBalance.address) {
+      setBalance(formatUSDC(tokenBalance.balanceUsdc))
     }
-  }, [address, tokenAddress])
+  }, [tokenBalance.address])
 
   return balance
 }
