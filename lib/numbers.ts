@@ -1,3 +1,5 @@
+import { utils } from "ethers"
+
 const Formatter = new Intl.NumberFormat("en-EN", {
   maximumFractionDigits: 2,
 })
@@ -11,4 +13,5 @@ export const formatNumber = (value: any) => Formatter.format(value)
 export const formatNumberCompact = (value: any) =>
   CompactFormatter.format(value)
 export const formatUSDC = (value: any) => value / 1e6
-export const parseWeiUSDC = (value: any) => `${value * 1e6}`
+export const parseWeiUSDC = (value: any) =>
+  utils.parseUnits(value, 6).toString()
