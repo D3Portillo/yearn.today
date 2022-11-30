@@ -42,9 +42,7 @@ function WidgetInvestment({
           Withdraw
         </TabButton>
       </nav>
-      <section className="flex flex-col mt-4 gap-4">
-        {showWithdraw ? <Withdraw vault={vault} /> : <Deposit vault={vault} />}
-      </section>
+      {showWithdraw ? <Withdraw vault={vault} /> : <Deposit vault={vault} />}
     </CardContainer>
   )
 }
