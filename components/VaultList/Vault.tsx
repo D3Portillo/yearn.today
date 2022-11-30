@@ -16,6 +16,7 @@ function Vault({
   icon,
   address,
   holderAddress,
+  version,
 }: VaultType & {
   holderAddress: string
 }) {
@@ -52,6 +53,7 @@ function Vault({
         <Image alt="" width={42} height={42} src={icon} />
       </td>
       <td className="px-2 py-4">{name}</td>
+      <td className="px-2 py-4">{version}</td>
       <td className="px-2 py-4">{formatCurreny(tvl.tvl)} USD</td>
       <td className="px-2 py-4">
         {holderAddress ? `${formatCurreny(vault.balance)} USD` : "-"}
