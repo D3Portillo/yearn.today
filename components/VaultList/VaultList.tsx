@@ -32,30 +32,32 @@ function VaultList() {
       />
       <h2>Stable Vault Opportunities</h2>
       <p>Invest on USDC vaults to earn constant rewards.</p>
-      <table className="w-full mt-8">
-        <thead>
-          <tr className="text-left">
-            <th colSpan={2}>Name</th>
-            <th className="p-2">Version</th>
-            <th className="p-2">TVL</th>
-            <th className="p-2">Your investment</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {list.length === 0 && vaultLoadingItemsList}
-          {list.map((vault) => {
-            return (
-              <Vault
-                key={`vault-${vault.symbol}-${vault.address}`}
-                onOpenModal={() => handleOpenModal(vault.address)}
-                holderAddress={address!}
-                {...vault}
-              />
-            )
-          })}
-        </tbody>
-      </table>
+      <div className="w-full overflow-auto mt-8">
+        <table className="w-full">
+          <thead>
+            <tr className="text-left">
+              <th colSpan={2}>Name</th>
+              <th className="p-2">Version</th>
+              <th className="p-2">TVL</th>
+              <th className="p-2">Your investment</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {list.length === 0 && vaultLoadingItemsList}
+            {list.map((vault) => {
+              return (
+                <Vault
+                  key={`vault-${vault.symbol}-${vault.address}`}
+                  onOpenModal={() => handleOpenModal(vault.address)}
+                  holderAddress={address!}
+                  {...vault}
+                />
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
     </CardContainer>
   )
 }

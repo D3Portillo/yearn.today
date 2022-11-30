@@ -36,12 +36,14 @@ function Vault({
       onClick={handleRowClick}
       className="border-t hover:bg-[rgba(0,0,0,0.022)] cursor-pointer border-zinc-100"
     >
-      <td className="p-2 w-12">
+      <td className="p-2 w-12 min-w-[3rem]">
         <Image alt="" width={42} height={42} src={icon} />
       </td>
-      <td className="px-2 py-4">{name}</td>
+      <td className="px-2 py-4 whitespace-nowrap">{name}</td>
       <td className="px-2 py-4">{version}</td>
-      <td className="px-2 py-4">{formatCurreny(tvl.tvl)} USD</td>
+      <td className="px-2 py-4 whitespace-nowrap">
+        {formatCurreny(tvl.tvl)} USD
+      </td>
       <td className="px-2 py-4">
         {holderAddress ? `${formatCurreny(holderInvestment)} USD` : "-"}
       </td>

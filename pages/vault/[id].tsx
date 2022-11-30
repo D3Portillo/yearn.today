@@ -62,7 +62,7 @@ export default function VaultPage() {
 
   return (
     <MainLayout>
-      <CardContainer className="flex flex-grow gap-12 mt-8">
+      <CardContainer className="flex flex-col md:flex-row flex-grow gap-12 mt-8">
         <section className="flex flex-col">
           <h2>
             <Link href="/" className="text-zinc-500">
@@ -108,7 +108,7 @@ export default function VaultPage() {
           <div className="flex-grow" />
           <Link
             target="_blank"
-            className="mt-12 text-sm inline-flex items-center"
+            className="mt-12 text-sm hidden md:inline-flex items-center"
             href={`https://etherscan.io/address/${id}`}
           >
             <span>Etherscan</span>
@@ -117,9 +117,9 @@ export default function VaultPage() {
         </section>
         <Strategies strategies={vault.metadata.strategies} />
       </CardContainer>
-      <main className="flex gap-8 mt-8 items-start">
-        <WidgetInvestment vaultAddress={id} />
-        <CardContainer className="flex-grow">
+      <main className="flex flex-col md:flex-row gap-8 mt-8 items-start">
+        <WidgetInvestment maxWidth="md:max-w-sm" vaultAddress={id} />
+        <CardContainer className="w-full">
           <h2 className="m-0">Earnings Over Time</h2>
           <ChartEarningsOverTime
             historicEarnings={vault.metadata.historicEarnings || []}
