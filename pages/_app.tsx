@@ -8,6 +8,7 @@ import { WagmiConfig, createClient, chain, configureChains } from "wagmi"
 import { publicProvider } from "wagmi/providers/public"
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit"
 import { Toaster } from "react-hot-toast"
+import { YearnClientProvider } from "@/lib/contexts/Yearn"
 
 const { provider, chains } = configureChains(
   [chain.mainnet],
@@ -15,7 +16,7 @@ const { provider, chains } = configureChains(
 )
 
 const { connectors } = getDefaultWallets({
-  appName: "replace.this",
+  appName: "yearn.today",
   chains,
 })
 
@@ -32,7 +33,9 @@ export default function App({ Component, pageProps }: AppProps) {
       <Toaster />
       <WagmiConfig client={client}>
         <RainbowKitProvider chains={chains}>
-          <Component {...pageProps} />
+          <YearnClientProvider>
+            <Component {...pageProps} />
+          </YearnClientProvider>
         </RainbowKitProvider>
       </WagmiConfig>
     </main>
