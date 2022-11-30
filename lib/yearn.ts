@@ -22,7 +22,8 @@ export const useVault = (vaultAddress: string) => {
         })
         .catch(noOp)
     }
-  })
+  }, [vaultAddress])
+
   return vault
 }
 
@@ -74,7 +75,7 @@ export const useBalance = (
           }
         })
     }
-  }, [address])
+  }, [address, tokenAddress])
 
   return balance
 }
