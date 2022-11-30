@@ -1,18 +1,21 @@
 import { useEffect, useState, type PropsWithChildren } from "react"
-import { useRouter } from "next/router"
 
 import { useYearnClient } from "@/lib/yearn"
 import CardContainer from "@/components/layout/CardContainer"
 import Withdraw from "./Withdraw"
 import Deposit from "./Deposit"
 
-function WidgetInvestment() {
-  const router = useRouter()
+function WidgetInvestment({
+  vaultAddress,
+  maxWidth = "max-w-sm",
+}: {
+  vaultAddress: string
+  maxWidth?: string
+}) {
   const client = useYearnClient()
   const [showWithdraw, setShowWithdraw] = useState(false)
   const [tokenAddress, setTokenAddress] = useState("")
 
-  const { id: vaultAddress } = router.query as { id: string }
   const toggleShowWithdraw = () => setShowWithdraw((show) => !show)
 
   useEffect(() => {
@@ -30,7 +33,7 @@ function WidgetInvestment() {
   }
 
   return (
-    <CardContainer className="w-full max-w-sm">
+    <CardContainer className={`w-full ${maxWidth}`}>
       <nav className="w-full flex text-xl">
         <TabButton isActive={!showWithdraw} onClick={toggleShowWithdraw}>
           Deposit

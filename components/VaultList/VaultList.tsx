@@ -3,19 +3,33 @@ import type { Vault as VaultType } from "@/pages/api/vaults"
 import { useAccount } from "wagmi"
 
 import ff from "@/lib/services/ff"
+import useOnOffMachine from "@/lib/hooks/useOnOffMachine"
 import CardContainer from "@/components/layout/CardContainer"
+import ModalDeposit from "@/components/ModalDeposit"
 import Vault from "./Vault"
 
 function VaultList() {
   const { address } = useAccount()
+  const modalMachine = useOnOffMachine()
+  const [vaultAddress, setVaultAddress] = useState("")
   const [list, setList] = useState<VaultType[]>([])
 
   useEffect(() => {
     ff.get<VaultType[]>(["/vaults"]).then(setList)
   }, [])
 
+  function handleOpenModal(vaultAddress: string) {
+    setVaultAddress(vaultAddress)
+    modalMachine.turnOn()
+  }
+
   return (
     <CardContainer className="mt-8 min-h-[32rem] pb-12">
+      <ModalDeposit
+        onClose={modalMachine.turnOff}
+        show={modalMachine.isOn}
+        vaultAddress={vaultAddress}
+      />
       <h2>Stable Vault Opportunities</h2>
       <p>Invest on USDC vaults to earn constant rewards.</p>
       <table className="w-full mt-8">
@@ -34,6 +48,7 @@ function VaultList() {
             return (
               <Vault
                 key={`vault-${vault.symbol}-${vault.address}`}
+                onOpenModal={() => handleOpenModal(vault.address)}
                 holderAddress={address!}
                 {...vault}
               />

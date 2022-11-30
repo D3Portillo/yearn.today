@@ -114,7 +114,7 @@ export default function VaultPage() {
         <Strategies strategies={vault.metadata.strategies} />
       </CardContainer>
       <main className="flex gap-8 mt-8 items-start">
-        <WidgetInvestment />
+        <WidgetInvestment vaultAddress={id} />
         <CardContainer className="flex-grow">
           <h2 className="m-0">Earnings Over Time</h2>
           <ChartEarningsOverTime

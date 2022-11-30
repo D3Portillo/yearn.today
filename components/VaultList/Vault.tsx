@@ -16,9 +16,11 @@ function Vault({
   icon,
   address,
   holderAddress,
+  onOpenModal,
   version,
 }: VaultType & {
   holderAddress: string
+  onOpenModal(): void
 }) {
   const router = useRouter()
   const [vault, asyncSetVault] = useAsyncState({ balance: 0 })
@@ -64,7 +66,10 @@ function Vault({
             onClick={(e) => e.stopPropagation()}
             className="flex items-center"
           >
-            <button className="bg-black py-2 text-lg px-6 rounded-full text-white">
+            <button
+              onClick={onOpenModal}
+              className="bg-black py-2 text-lg px-6 rounded-full text-white"
+            >
               Deposit
             </button>
             <Link href={`/vault/${address}`} className="p-4 ml-2 group">
