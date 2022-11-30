@@ -5,6 +5,7 @@ export type Vault = {
   address: string
   symbol: string
   name: string
+  version: string
   display_name: string
   icon: string
   tvl: {
