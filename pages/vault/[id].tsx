@@ -7,7 +7,7 @@ import { useRouter } from "next/router"
 import { FiArrowUpRight } from "react-icons/fi"
 
 import { formatCurreny } from "@/lib/currency"
-import { formatNumber } from "@/lib/numbers"
+import { formatNumber, formatUSDC } from "@/lib/numbers"
 import useAsyncState from "@/lib/hooks/useAsyncState"
 import { useYearnClient } from "@/lib/yearn"
 import CardContainer from "@/components/layout/CardContainer"
@@ -23,7 +23,7 @@ export default function VaultPage() {
   const [vault, asyncSetVault] = useAsyncState({
     name: "",
     amountUsdc: 0,
-    holderBalance: "0",
+    holderBalance: 0,
     apy: "0",
     icon: "",
     metadata: {} as YearnVaultType["metadata"],
@@ -51,7 +51,9 @@ export default function VaultPage() {
       client.vaults.positionsOf(address, [id]).then(([position]) => {
         if (position) {
           asyncSetVault({
-            holderBalance: position.underlyingTokenBalance.amountUsdc,
+            holderBalance: formatUSDC(
+              position.underlyingTokenBalance.amountUsdc
+            ),
           })
         }
       })
