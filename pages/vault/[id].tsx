@@ -28,6 +28,7 @@ export default function VaultPage() {
     apy: "0",
     icon: "",
     metadata: {} as YearnVaultType["metadata"],
+    version: "0",
   })
 
   const { id } = router.query as { id: string }
@@ -70,8 +71,8 @@ export default function VaultPage() {
             <span>{vault.name}</span>
           </h2>
           <section className="flex gap-4 mt-4 items-start">
-            <div className="p-4 bg-white rounded-xl">
-              <figure className="w-12 h-12">
+            <div className="p-4 bg-white border border-zinc-100 rounded-xl">
+              <figure className="w-16 h-16">
                 <Image
                   className="flex text-4xl items-center justify-center"
                   alt="💰"
@@ -90,12 +91,16 @@ export default function VaultPage() {
                   </td>
                 </tr>
                 <tr>
-                  <td>Total Assets</td>
-                  <td className="pl-4">{formatCurreny(vault.amountUsdc)}</td>
+                  <td>Investment</td>
+                  <td className="pl-4">{formatCurreny(vault.holderBalance)}</td>
                 </tr>
                 <tr>
-                  <td>Your investment</td>
-                  <td className="pl-4">{formatCurreny(vault.holderBalance)}</td>
+                  <td>Deploy Version</td>
+                  <td className="pl-4">v{vault.version}</td>
+                </tr>
+                <tr>
+                  <td>Total Assets</td>
+                  <td className="pl-4">{formatCurreny(vault.amountUsdc)}</td>
                 </tr>
               </tbody>
             </table>
