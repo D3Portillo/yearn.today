@@ -16,7 +16,7 @@ function VaultList() {
 
   return (
     <CardContainer className="mt-8 min-h-[32rem] pb-12">
-      <h2>Stable Opportunities</h2>
+      <h2>Stable Vault Opportunities</h2>
       <p>Invest on USDC vaults to earn constant rewards.</p>
       <table className="w-full mt-8">
         <thead>
