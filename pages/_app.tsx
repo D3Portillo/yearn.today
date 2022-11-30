@@ -6,13 +6,15 @@ import type { AppProps } from "next/app"
 import { Roboto } from "@next/font/google"
 import { WagmiConfig, createClient, chain, configureChains } from "wagmi"
 import { publicProvider } from "wagmi/providers/public"
+import { alchemyProvider } from "wagmi/providers/alchemy"
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit"
 import { Toaster } from "react-hot-toast"
 import { YearnClientProvider } from "@/lib/contexts/Yearn"
+import { ALCHEMY_API_KEY } from "@/lib/constants"
 
-const { provider, chains } = configureChains(
+const { provider, chains, webSocketProvider } = configureChains(
   [chain.mainnet],
-  [publicProvider()]
+  [alchemyProvider({ apiKey: ALCHEMY_API_KEY }), publicProvider()]
 )
 
 const { connectors } = getDefaultWallets({
@@ -22,6 +24,7 @@ const { connectors } = getDefaultWallets({
 
 const client = createClient({
   autoConnect: true,
+  webSocketProvider,
   provider,
   connectors,
 })
