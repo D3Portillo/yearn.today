@@ -6,6 +6,7 @@ import { withPreventDefault } from "@/lib/inputs"
 import { useAllowance, useBalance, useVault, useYearnClient } from "@/lib/yearn"
 import { parseWeiUSDC } from "@/lib/numbers"
 import Button from "@/components/Button"
+import { isGeneratorFunction } from "util/types"
 
 function Deposit({
   vault,
@@ -49,6 +50,9 @@ function Deposit({
 
   function handleConfirm() {
     if (!address) return toast.error("You must connect to continue")
+    if ((amount as any) > balance) {
+      return toast.error("You don't own that much assets")
+    }
     if (amount) {
       let toaster = toast.loading("Working...")
       client.vaults
