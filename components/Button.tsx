@@ -8,9 +8,11 @@ function Button({
   isLink,
   fontSize = "text-lg",
   borderRadius = "rounded-full",
+  isDisabled,
   ...props
 }: PropsWithChildren<
   {
+    isDisabled?: boolean
     isLink?: boolean
     target?: string
     href?: string
@@ -23,12 +25,14 @@ function Button({
   const Wrapper = (isLink ? Link : "button") as any
   return (
     <Wrapper
+      disabled={isDisabled}
       {...props}
       className={classnames(
         className,
         borderRadius,
         fontSize,
-        "bg-yearn-blue py-2 px-6 text-white"
+        "py-2 px-6",
+        isDisabled ? "bg-black/5 text-black/25" : "bg-yearn-blue text-white"
       )}
     >
       {children}
