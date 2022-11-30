@@ -1,6 +1,7 @@
 import { Fragment, useEffect, useState } from "react"
 import { useAccount } from "wagmi"
 
+import { formatUSDC } from "@/lib/numbers"
 import { useYearnClient } from "@/lib/yearn"
 import Button from "@/components/Button"
 
@@ -10,22 +11,23 @@ function Withdraw({
   vault: { tokenAddress: string; vaultAddress: string }
 }) {
   const client = useYearnClient()
-  const [balance, setBalance] = useState("0")
+  const [balance, setBalance] = useState(0)
   const { address: holderAddress } = useAccount()
 
-  const { tokenAddress } = vault
+  const { vaultAddress } = vault
   useEffect(() => {
-    if (client && holderAddress && tokenAddress) {
+    if (client && holderAddress && vaultAddress) {
       client.services.helper
-        .tokenBalances(holderAddress, [tokenAddress])
+        .tokenBalances(holderAddress, [vaultAddress])
         .then(([balance]) => {
           if (balance) {
-            // Fetch for connected address balance for vault token
-            setBalance(balance.balanceUsdc)
+            console.log({ balance })
+            // Fetch for connected address balance for vault utilty token
+            setBalance(formatUSDC(balance.balanceUsdc))
           }
         })
     }
-  }, [client?.ready, holderAddress, tokenAddress])
+  }, [client?.ready, holderAddress, vaultAddress])
 
   return (
     <Fragment>

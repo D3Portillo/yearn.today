@@ -1,6 +1,7 @@
 import { Fragment, useEffect, useState } from "react"
 import { useAccount } from "wagmi"
 
+import { formatUSDC } from "@/lib/numbers"
 import { useYearnClient } from "@/lib/yearn"
 import Button from "@/components/Button"
 
@@ -10,7 +11,7 @@ function Deposit({
   vault: { tokenAddress: string; vaultAddress: string }
 }) {
   const client = useYearnClient()
-  const [balance, setBalance] = useState("0")
+  const [balance, setBalance] = useState(0)
   const { address: holderAddress } = useAccount()
 
   const { tokenAddress } = vault
@@ -21,7 +22,7 @@ function Deposit({
         .then(([balance]) => {
           if (balance) {
             // Fetch for connected address balance for vault token
-            setBalance(balance.balanceUsdc)
+            setBalance(formatUSDC(balance.balanceUsdc))
           }
         })
     }
