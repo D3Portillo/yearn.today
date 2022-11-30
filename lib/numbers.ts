@@ -12,6 +12,6 @@ const CompactFormatter = new Intl.NumberFormat("en-US", {
 export const formatNumber = (value: any) => Formatter.format(value)
 export const formatNumberCompact = (value: any) =>
   CompactFormatter.format(value)
-export const formatUSDC = (value: any) => value / 1e6
+export const formatUSDC = (value: any) => (value ? value / 1e6 : 0)
 export const parseWeiUSDC = (value: any) =>
-  utils.parseUnits(value, 6).toString()
+  value ? utils.parseUnits(value, 6).toString() : "0"
