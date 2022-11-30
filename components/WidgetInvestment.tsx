@@ -7,7 +7,7 @@ function WidgetInvestment() {
   const toggleShowWithdraw = () => setShowWithdraw((show) => !show)
 
   return (
-    <CardContainer>
+    <CardContainer className="w-full max-w-sm">
       <nav className="w-full flex text-xl">
         <TabButton isActive={!showWithdraw} onClick={toggleShowWithdraw}>
           Deposit
