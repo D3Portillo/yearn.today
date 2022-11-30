@@ -1,3 +1,7 @@
 h2 {
   @apply text-2xl font-bold mt-1 mb-2;
 }
+
+[data-type="md-container"] a {
+  @apply hover:underline text-yearn-blue;
+}
