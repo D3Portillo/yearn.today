@@ -12,7 +12,7 @@ function Strategies({
           return (
             <details
               key={`strategy-${strategy.address}`}
-              className="group w-full max-w-sm"
+              className="group w-full lg:max-w-sm"
             >
               <summary className="flex select-none cursor-pointer items-center justify-between rounded-lg bg-[rgba(0,0,0,0.02)] p-4">
                 <h3 className="font-medium text-gray-900 whitespace-nowrap overflow-ellipsis overflow-hidden">

@@ -33,7 +33,7 @@ function InputNumber<InputValueType = string>({
       <input
         {...props}
         value={value as any}
-        className="bg-transparent flex-grow p-2 outline-none"
+        className="block bg-transparent w-full p-2 outline-none"
         onChange={({ target }) => handleOnChange(target.value as any)}
         placeholder="0.000"
         name="amount"
