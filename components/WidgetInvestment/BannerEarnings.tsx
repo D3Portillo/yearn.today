@@ -2,11 +2,11 @@ import { formatCurreny } from "@/lib/currency"
 import { utils } from "ethers"
 
 function BannerEarnings({
-  tokenPrice,
+  tokenPrice = 0,
   amount,
   decimals = 6,
 }: {
-  tokenPrice: string | number
+  tokenPrice?: string | number
   amount: number
   decimals?: string | number
 }) {

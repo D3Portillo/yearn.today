@@ -4,9 +4,17 @@ import toast from "react-hot-toast"
 import { utils } from "ethers"
 
 import { withPreventDefault } from "@/lib/inputs"
-import { useAllowance, useBalance, useVault, useYearnClient } from "@/lib/yearn"
+import {
+  useAllowance,
+  useRawTokenBalance,
+  useVault,
+  useYearnClient,
+} from "@/lib/yearn"
+import { formatNumberUnits } from "@/lib/numbers"
 import Button from "@/components/Button"
 import BannerEarnings from "./BannerEarnings"
+import InputNumber from "./InputNumber"
+import Table, { Row } from "./Table"
 
 function Deposit({
   vault,
@@ -15,7 +23,7 @@ function Deposit({
 }) {
   const { vaultAddress, tokenAddress } = vault
 
-  const [amount, setAmount] = useState("")
+  const [amount, setAmount] = useState(0)
   const client = useYearnClient()
   const yVault = useVault(vaultAddress)
   const { address } = useAccount()
@@ -26,10 +34,10 @@ function Deposit({
     tokenAddress
   )
 
-  const balance = useBalance(address, tokenAddress)
+  const { balance } = useRawTokenBalance(address, tokenAddress)
   const maxDeposit = yVault.metadata?.depositLimit
-  const nAmount = amount as any as number
 
+  const formattedBalance = formatNumberUnits(balance, yVault.decimals)
   function handleApprove() {
     if (!address) return toast.error("You must connect to continue")
     else {
@@ -52,7 +60,7 @@ function Deposit({
 
   function handleConfirm() {
     if (!address) return toast.error("You must connect to continue")
-    if (nAmount > balance) {
+    if (amount > balance) {
       return toast.error("You don't own that much assets")
     }
     let toaster = toast.loading("Working...")
@@ -60,7 +68,7 @@ function Deposit({
       .deposit(
         vaultAddress,
         tokenAddress,
-        utils.parseUnits(amount, yVault.decimals) as any,
+        utils.parseUnits(amount as any, yVault.decimals) as any,
         address
       )
       .then(async (tx) => {
@@ -77,7 +85,7 @@ function Deposit({
   }
 
   const hideApproveButton = depositAllowance.amount
-    ? (depositAllowance.amount as any) >= yVault.metadata?.depositLimit
+    ? depositAllowance?.amount >= (yVault.metadata?.depositLimit || 0)
     : true
 
   function handleSubmit() {
@@ -91,32 +99,25 @@ function Deposit({
       className="flex flex-col mt-4 gap-4"
       onSubmit={withPreventDefault(handleSubmit)}
     >
-      <input
-        placeholder="0.00"
-        type="number"
+      <InputNumber<number>
+        maxValue={formattedBalance as any}
         value={amount}
-        onChange={({ target }) => setAmount(target.value)}
-        step="0.1"
-        min={0}
-        required
-        name="amount"
-        className="text-xl border rounded p-2 bg-transparent"
+        onChange={setAmount}
       />
-      <div className="flex items-center gap-2 text-zinc-600">
-        <span className="font-bold">Balance:</span>
-        <span>
-          {balance} {yVault.metadata?.displayName || "USDC"}
-        </span>
-      </div>
+      <Table>
+        <Row title="Balance">
+          ${formattedBalance} {yVault.metadata?.displayName || "USDC"}
+        </Row>
+      </Table>
       <Button isDisabled={hideApproveButton} fontSize="text-xl">
         Approve
       </Button>
       <Button isDisabled={!hideApproveButton} fontSize="text-xl">
         Confirm
       </Button>
-      {nAmount > 0 && (
+      {amount > 0 && (
         <BannerEarnings
-          amount={nAmount}
+          amount={amount}
           tokenPrice={yVault.metadata?.pricePerShare}
           decimals={yVault.decimals}
         />

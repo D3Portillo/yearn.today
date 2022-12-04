@@ -17,7 +17,7 @@ function WidgetInvestment({
   const withdrawMachine = useOnOffMachine()
 
   const vault = {
-    tokenAddress: yVault?.token,
+    tokenAddress: yVault?.token!,
     vaultAddress,
   }
 
