@@ -8,8 +8,9 @@ function AssetImage({ src }: { src: any }) {
         <Image
           className="flex text-4xl items-center justify-center"
           alt="💰"
+          blurDataURL={asset_usdc.blurDataURL}
           placeholder={src ? "empty" : "blur"}
-          src={src || asset_usdc}
+          src={src || ""}
           width={120}
           height={120}
         />
