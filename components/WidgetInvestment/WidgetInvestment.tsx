@@ -1,6 +1,6 @@
-import { useEffect, useState, type PropsWithChildren } from "react"
+import { useState, type PropsWithChildren } from "react"
 
-import { useYearnClient } from "@/lib/yearn"
+import { useVault } from "@/lib/yearn"
 import CardContainer from "@/components/layout/CardContainer"
 import Withdraw from "./Withdraw"
 import Deposit from "./Deposit"
@@ -12,23 +12,13 @@ function WidgetInvestment({
   vaultAddress: string
   maxWidth?: string
 }) {
-  const client = useYearnClient()
+  const yVault = useVault(vaultAddress)
   const [showWithdraw, setShowWithdraw] = useState(false)
-  const [tokenAddress, setTokenAddress] = useState("")
 
   const toggleShowWithdraw = () => setShowWithdraw((show) => !show)
 
-  useEffect(() => {
-    if (client && vaultAddress) {
-      client.vaults.get([vaultAddress]).then(([vault]) => {
-        // Fetch for vault token
-        setTokenAddress(vault.token)
-      })
-    }
-  }, [client?.ready, vaultAddress])
-
   const vault = {
-    tokenAddress,
+    tokenAddress: yVault?.token,
     vaultAddress,
   }
 

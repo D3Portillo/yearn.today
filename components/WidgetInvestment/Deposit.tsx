@@ -8,14 +8,12 @@ import { formatUSDC, parseWeiUSDC } from "@/lib/numbers"
 import Button from "@/components/Button"
 import { formatCurreny } from "@/lib/currency"
 
-const USDC_ADDR = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
-
 function Deposit({
   vault,
 }: {
   vault: { tokenAddress: string; vaultAddress: string }
 }) {
-  const { vaultAddress } = vault
+  const { vaultAddress, tokenAddress } = vault
 
   const [amount, setAmount] = useState("")
   const client = useYearnClient()
@@ -25,9 +23,10 @@ function Deposit({
     "deposit",
     address,
     vaultAddress,
-    USDC_ADDR
+    tokenAddress
   )
-  const balance = useBalance(address, USDC_ADDR)
+
+  const balance = useBalance(address, tokenAddress)
   const maxDeposit = yVault.metadata?.depositLimit
   const nAmount = amount as any as number
 
@@ -36,7 +35,7 @@ function Deposit({
     else {
       let toaster = toast.loading("Working...")
       client.vaults
-        .approveDeposit(address, vaultAddress, USDC_ADDR, maxDeposit)
+        .approveDeposit(address, vaultAddress, tokenAddress, maxDeposit)
         .then(async (tx) => {
           await tx?.wait()
           toast.success("Tx Confirmed")
@@ -58,9 +57,7 @@ function Deposit({
     }
     let toaster = toast.loading("Working...")
     client.vaults
-      .deposit(vaultAddress, USDC_ADDR, parseWeiUSDC(amount), address, {
-        slippage: 5,
-      })
+      .deposit(vaultAddress, tokenAddress, parseWeiUSDC(amount), address)
       .then(async (tx) => {
         await tx?.wait()
         toast.success("Yaaay!")
@@ -127,5 +124,4 @@ function Deposit({
   )
 }
 
-function getInvestment() {}
 export default Deposit
