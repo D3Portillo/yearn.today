@@ -1,8 +1,7 @@
 import type { YDaemonVault } from "@/types/shared"
 import type { NextApiRequest, NextApiResponse } from "next"
-import { ADDRESS_DAI, ADDRESS_USDC, ADDRESS_USDT } from "@/lib/constants"
+import { SUPPORTED_ASSETS } from "@/lib/constants"
 
-const SUPPORTED_ASSETS = [ADDRESS_USDC, ADDRESS_USDT, ADDRESS_DAI]
 export default async function handler(_: NextApiRequest, res: NextApiResponse) {
   let vaults: YDaemonVault[] = []
 
