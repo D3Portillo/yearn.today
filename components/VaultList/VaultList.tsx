@@ -31,7 +31,7 @@ function VaultList() {
         vaultAddress={vaultAddress}
       />
       <h2>Stable Vault Opportunities</h2>
-      <p>Invest on USDC vaults to earn constant rewards.</p>
+      <p>Invest on yearn-stable vaults and earn constant rewards.</p>
       <div className="w-full overflow-auto mt-8">
         <table className="w-full">
           <thead>
