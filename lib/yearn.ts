@@ -11,7 +11,7 @@ export const useYearnClient = () => {
 
 export const useVault = (vaultAddress: string) => {
   const client = useYearnClient()
-  const [vault, setVault] = useState({} as Vault)
+  const [vault, setVault] = useState({} as Partial<Vault>)
 
   useEffect(() => {
     if (vaultAddress) {
@@ -34,7 +34,7 @@ export const useAllowance = (
   tokenAddress: string
 ) => {
   const client = useYearnClient()
-  const [allowance, setAllowance] = useState({} as TokenAllowance)
+  const [allowance, setAllowance] = useState({} as Partial<TokenAllowance>)
 
   useEffect(() => {
     if (holderAddress && vaultAddress && tokenAddress) {
@@ -54,10 +54,14 @@ export const useAllowance = (
 
 export const useRawTokenBalance = (
   address: string | undefined,
-  tokenAddress: string
+  tokenAddress?: string
 ) => {
   const client = useYearnClient()
-  const [balance, setBalance] = useState({} as TokenBalance)
+  const [balance, setBalance] = useState(
+    {} as Pick<TokenBalance, "address" | "balanceUsdc" | "priceUsdc"> & {
+      balance: number
+    }
+  )
 
   useEffect(() => {
     if (address && tokenAddress) {
@@ -66,7 +70,7 @@ export const useRawTokenBalance = (
         .then(([balance]) => {
           if (balance) {
             // Fetch for connected address balance for vault token
-            setBalance(balance)
+            setBalance(balance as any)
           }
         })
     }
@@ -80,11 +84,11 @@ export const useRawTokenBalance = (
  * @param address tokenHolder address
  * @param tokenAddress asset address
  */
-export const useBalance = (
+export const useBalanceUSDC = (
   address: string | undefined,
-  tokenAddress: string
+  tokenAddress?: string
 ) => {
-  const [balance, setBalance] = useState(0)
+  const [balance, setBalance] = useState("0")
 
   const tokenBalance = useRawTokenBalance(address, tokenAddress)
   useEffect(() => {
