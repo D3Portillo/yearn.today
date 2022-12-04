@@ -4,9 +4,9 @@ import toast from "react-hot-toast"
 
 import { withPreventDefault } from "@/lib/inputs"
 import { useAllowance, useBalance, useVault, useYearnClient } from "@/lib/yearn"
-import { formatUSDC, parseWeiUSDC } from "@/lib/numbers"
+import { parseWeiUSDC } from "@/lib/numbers"
 import Button from "@/components/Button"
-import { formatCurreny } from "@/lib/currency"
+import BannerEarnings from "./BannerEarnings"
 
 function Deposit({
   vault,
@@ -99,7 +99,9 @@ function Deposit({
       />
       <div className="flex items-center gap-2 text-zinc-600">
         <span className="font-bold">Balance:</span>
-        <span>{balance} USDC</span>
+        <span>
+          {balance} {yVault.metadata?.displayName || "USDC"}
+        </span>
       </div>
       <Button isDisabled={hideApproveButton} fontSize="text-xl">
         Approve
@@ -108,17 +110,11 @@ function Deposit({
         Confirm
       </Button>
       {nAmount > 0 && (
-        <div className="border border-dotted p-2 rounded-xl text-zinc-600">
-          <p className="text-sm text-center">
-            <span>⚡</span> You can earn{" "}
-            <strong className="text-yearn-blue">
-              {formatCurreny(
-                nAmount * formatUSDC(yVault.metadata?.pricePerShare)
-              )}
-            </strong>
-            /year with this investment
-          </p>
-        </div>
+        <BannerEarnings
+          amount={nAmount}
+          tokenPrice={yVault.metadata?.pricePerShare}
+          decimals={yVault.decimals}
+        />
       )}
     </form>
   )
