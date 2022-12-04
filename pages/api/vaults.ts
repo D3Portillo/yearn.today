@@ -1,30 +1,10 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import type { YDaemonVault } from "@/types/shared"
 import type { NextApiRequest, NextApiResponse } from "next"
+import { ADDRESS_DAI, ADDRESS_USDC, ADDRESS_USDT } from "@/lib/constants"
 
-export type Vault = {
-  address: string
-  symbol: string
-  name: string
-  version: string
-  display_name: string
-  icon: string
-  tvl: {
-    total_assets: number
-    price: number
-    tvl: number
-  }
-  apy: {
-    type: string
-    gross_apr: number
-    net_apy: number
-  }
-  token: {
-    address: string
-  }
-}
-
+const SUPPORTED_ASSETS = [ADDRESS_USDC, ADDRESS_USDT, ADDRESS_DAI]
 export default async function handler(_: NextApiRequest, res: NextApiResponse) {
-  let vaults: Vault[] = []
+  let vaults: YDaemonVault[] = []
 
   try {
     vaults = await (
@@ -32,10 +12,11 @@ export default async function handler(_: NextApiRequest, res: NextApiResponse) {
     ).json()
 
     vaults = vaults
-      .filter((vault) => {
-        // Filter for only USDC-in vaults
-        return vault.symbol.includes("USDC") && vault.display_name
-      })
+      .filter(
+        (vault) =>
+          vault.apy.type !== "error" &&
+          SUPPORTED_ASSETS.includes(vault.token.address)
+      )
       .map((vault) => {
         // search for icon(url) under token.icon else append default url
         return {
@@ -44,7 +25,7 @@ export default async function handler(_: NextApiRequest, res: NextApiResponse) {
         }
       })
   } catch (_) {}
-  // Data fresh for 5s. Stale until 60s
-  res.setHeader("Cache-Control", "max-age=5, stale-while-revalidate=59")
+  // Data fresh for 5s. Stale until 120s
+  res.setHeader("Cache-Control", "max-age=5, stale-while-revalidate=120")
   res.status(200).json(vaults)
 }
