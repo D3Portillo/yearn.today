@@ -11,6 +11,7 @@ import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit"
 import { Toaster } from "react-hot-toast"
 import { YearnClientProvider } from "@/lib/contexts/Yearn"
 import { ALCHEMY_API_KEY } from "@/lib/constants"
+import NetworkSentinel from "@/components/NetworkSentinel"
 
 const { provider, chains, webSocketProvider } = configureChains(
   [chain.mainnet],
@@ -36,6 +37,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <Toaster />
       <WagmiConfig client={client}>
         <RainbowKitProvider chains={chains}>
+          <NetworkSentinel />
           <YearnClientProvider>
             <Component {...pageProps} />
           </YearnClientProvider>
