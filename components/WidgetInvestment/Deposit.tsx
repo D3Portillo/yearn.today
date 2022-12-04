@@ -1,10 +1,10 @@
 import { useState } from "react"
 import { useAccount } from "wagmi"
 import toast from "react-hot-toast"
+import { utils } from "ethers"
 
 import { withPreventDefault } from "@/lib/inputs"
 import { useAllowance, useBalance, useVault, useYearnClient } from "@/lib/yearn"
-import { parseWeiUSDC } from "@/lib/numbers"
 import Button from "@/components/Button"
 import BannerEarnings from "./BannerEarnings"
 
@@ -57,7 +57,12 @@ function Deposit({
     }
     let toaster = toast.loading("Working...")
     client.vaults
-      .deposit(vaultAddress, tokenAddress, parseWeiUSDC(amount), address)
+      .deposit(
+        vaultAddress,
+        tokenAddress,
+        utils.parseUnits(amount, yVault.decimals) as any,
+        address
+      )
       .then(async (tx) => {
         await tx?.wait()
         toast.success("Yaaay!")
