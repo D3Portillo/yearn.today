@@ -1,6 +1,7 @@
-import { useState, type PropsWithChildren } from "react"
+import type { PropsWithChildren } from "react"
 
 import { useVault } from "@/lib/yearn"
+import useOnOffMachine from "@/lib/hooks/useOnOffMachine"
 import CardContainer from "@/components/layout/CardContainer"
 import Withdraw from "./Withdraw"
 import Deposit from "./Deposit"
@@ -13,9 +14,7 @@ function WidgetInvestment({
   maxWidth?: string
 }) {
   const yVault = useVault(vaultAddress)
-  const [showWithdraw, setShowWithdraw] = useState(false)
-
-  const toggleShowWithdraw = () => setShowWithdraw((show) => !show)
+  const showWithdrawMachine = useOnOffMachine(false)
 
   const vault = {
     tokenAddress: yVault?.token,
@@ -25,14 +24,24 @@ function WidgetInvestment({
   return (
     <CardContainer className={`w-full ${maxWidth}`}>
       <nav className="w-full flex text-xl">
-        <TabButton isActive={!showWithdraw} onClick={toggleShowWithdraw}>
+        <TabButton
+          isActive={showWithdrawMachine.isOff}
+          onClick={showWithdrawMachine.turnOff}
+        >
           Deposit
         </TabButton>
-        <TabButton isActive={showWithdraw} onClick={toggleShowWithdraw}>
+        <TabButton
+          isActive={showWithdrawMachine.isOn}
+          onClick={showWithdrawMachine.turnOn}
+        >
           Withdraw
         </TabButton>
       </nav>
-      {showWithdraw ? <Withdraw vault={vault} /> : <Deposit vault={vault} />}
+      {showWithdrawMachine.isOn ? (
+        <Withdraw vault={vault} />
+      ) : (
+        <Deposit vault={vault} />
+      )}
     </CardContainer>
   )
 }
