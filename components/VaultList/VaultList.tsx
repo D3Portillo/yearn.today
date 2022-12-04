@@ -39,7 +39,7 @@ function VaultList() {
               <th colSpan={2}>Name</th>
               <th className="p-2">Version</th>
               <th className="p-2">TVL</th>
-              <th className="p-2">Your investment</th>
+              <th className="p-2">Your Deposits</th>
               <th></th>
             </tr>
           </thead>

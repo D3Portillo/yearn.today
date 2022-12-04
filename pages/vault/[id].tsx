@@ -29,7 +29,7 @@ export default function VaultPage() {
       }`}
     >
       <CardContainer className="flex flex-col md:flex-row flex-grow gap-12 mt-8">
-        <section className="flex flex-col">
+        <section className="flex flex-col items-start">
           <h2>
             <Link href="/" className="text-zinc-500">
               Vaults {"/"}
@@ -42,7 +42,7 @@ export default function VaultPage() {
               <Row title="APY">
                 <strong className="text-yearn-blue">{vaultAPY}%</strong>
               </Row>
-              <Row title="Investment">{formatCurreny(holderBalance)}</Row>
+              <Row title="Deposits">{formatCurreny(holderBalance)}</Row>
               <Row title="Total Assets">
                 {formatCurreny(
                   formatUSDC(vault.underlyingTokenBalance?.amountUsdc)
