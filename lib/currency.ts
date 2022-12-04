@@ -3,4 +3,4 @@ const Formatter = new Intl.NumberFormat("en-EN", {
   currency: "USD",
 })
 
-export const formatCurreny = (value: any) => Formatter.format(value)
+export const formatCurreny = (value: any) => Formatter.format(value || 0)
