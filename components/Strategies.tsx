@@ -15,7 +15,9 @@ function Strategies({
               className="group w-full max-w-sm"
             >
               <summary className="flex select-none cursor-pointer items-center justify-between rounded-lg bg-[rgba(0,0,0,0.02)] p-4">
-                <h3 className="font-medium text-gray-900">{strategy.name}</h3>
+                <h3 className="font-medium text-gray-900 whitespace-nowrap overflow-ellipsis overflow-hidden">
+                  {strategy.name}
+                </h3>
                 <svg
                   className="ml-1.5 h-5 w-5 flex-shrink-0 transition duration-300 group-open:-rotate-180"
                   xmlns="http://www.w3.org/2000/svg"
