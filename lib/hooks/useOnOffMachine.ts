@@ -7,6 +7,11 @@ export type OnOffMachine = {
   isOff: boolean
 }
 
+/**
+ * Simple state machine for truthy values
+ * @param isOnByDefault When true, `machine.isOn=true` at invoke.
+ * @default isOnByDefault false
+ */
 function useOnOffMachine(isOnByDefault: boolean = false): OnOffMachine {
   const [isOn, setIsOn] = useState(isOnByDefault)
   const turnOn = () => setIsOn(true)
