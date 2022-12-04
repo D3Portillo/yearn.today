@@ -105,8 +105,8 @@ function Deposit({
         onChange={setAmount}
       />
       <Table>
-        <Row title="Balance">
-          ${formattedBalance} {yVault.metadata?.displayName || "USDC"}
+        <Row title="Deposit Balance">
+          {formattedBalance} {yVault.metadata?.displayName || "USDC"}
         </Row>
       </Table>
       <Button isDisabled={hideApproveButton} fontSize="text-xl">
