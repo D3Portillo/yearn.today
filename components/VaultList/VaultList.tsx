@@ -1,5 +1,5 @@
+import type { YDaemonVault } from "@/types/shared"
 import { useEffect, useState } from "react"
-import type { Vault as VaultType } from "@/pages/api/vaults"
 import { useAccount } from "wagmi"
 
 import ff from "@/lib/services/ff"
@@ -12,10 +12,10 @@ function VaultList() {
   const { address } = useAccount()
   const modalMachine = useOnOffMachine()
   const [vaultAddress, setVaultAddress] = useState("")
-  const [list, setList] = useState<VaultType[]>([])
+  const [list, setList] = useState<YDaemonVault[]>([])
 
   useEffect(() => {
-    ff.get<VaultType[]>(["/vaults"]).then(setList)
+    ff.get<YDaemonVault[]>(["/vaults"]).then(setList)
   }, [])
 
   function handleOpenModal(vaultAddress: string) {
@@ -24,7 +24,7 @@ function VaultList() {
   }
 
   return (
-    <CardContainer className="mt-8 min-h-[32rem] pb-12">
+    <CardContainer className="mt-8 min-h-[24rem] pb-12">
       <ModalDeposit
         onClose={modalMachine.turnOff}
         show={modalMachine.isOn}
@@ -62,7 +62,7 @@ function VaultList() {
   )
 }
 
-const vaultLoadingItemsList = [...Array(5)].map((_, i) => (
+const vaultLoadingItemsList = [...Array(3)].map((_, i) => (
   <VaultLoadingState key={`empty-state-${i}`} />
 ))
 

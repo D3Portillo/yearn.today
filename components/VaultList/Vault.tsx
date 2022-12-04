@@ -1,4 +1,4 @@
-import type { Vault as TypeVault } from "@/pages/api/vaults"
+import type { YDaemonVault } from "@/types/shared"
 import Image from "next/image"
 import Link from "next/link"
 import { FaChevronRight } from "react-icons/fa"
@@ -15,7 +15,7 @@ function Vault({
   holderAddress,
   onOpenModal,
   version,
-}: TypeVault & {
+}: YDaemonVault & {
   holderAddress: string
   onOpenModal(): void
 }) {
