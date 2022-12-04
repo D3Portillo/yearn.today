@@ -34,7 +34,9 @@ function Strategies({
               <section
                 data-type="md-container"
                 dangerouslySetInnerHTML={{
-                  __html: marked.parse(strategy.description),
+                  __html: marked
+                    .parse(strategy.description)
+                    .replace(/href=/g, `target="_blank" href=`),
                 }}
                 className="mt-2 text-sm px-4 leading-relaxed text-gray-700"
               />
