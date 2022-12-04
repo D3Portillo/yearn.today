@@ -1,8 +1,8 @@
 import type { TokenAllowance, TokenBalance, Vault } from "@yfi/sdk"
 import { useEffect, useState } from "react"
 import { useYearnContext } from "./contexts/Yearn"
+import { formatNumber, formatUSDC } from "./numbers"
 import { noOp } from "./helpers"
-import { formatUSDC } from "./numbers"
 
 export const useYearnClient = () => {
   const yearnContext = useYearnContext()
@@ -98,4 +98,14 @@ export const useBalanceUSDC = (
   }, [tokenBalance.address])
 
   return balance
+}
+
+export const useVaultAPY = (vault: Partial<Vault>) => {
+  const { metadata } = vault
+  return {
+    ...metadata?.apy,
+    formatted: formatNumber(
+      ((metadata?.apy?.net_apy as any) || 0) * 100
+    ) as string,
+  }
 }
