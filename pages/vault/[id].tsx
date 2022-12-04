@@ -62,7 +62,9 @@ export default function VaultPage() {
 
   return (
     <MainLayout
-      title={`Vaults / ${yVault.symbol || id} v${yVault.version || "0.0"}`}
+      title={`Vaults / ${yVault.symbol || id || "yVault"} v${
+        yVault.version || "0.0"
+      }`}
     >
       <CardContainer className="flex flex-col md:flex-row flex-grow gap-12 mt-8">
         <section className="flex flex-col">
