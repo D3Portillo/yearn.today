@@ -73,7 +73,7 @@ function createChartConfig(data: string[][]) {
         },
       },
       splitNumber: 3,
-      min: 4,
+      min: 0,
     },
     grid: {
       height: 180,
