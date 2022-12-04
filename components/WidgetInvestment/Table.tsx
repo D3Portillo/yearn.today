@@ -16,7 +16,7 @@ export function Row({
 }>) {
   return (
     <tr>
-      <td className="font-bold">{title}:</td>
+      <td className="font-bold whitespace-nowrap">{title}:</td>
       <td className="pl-4">{children}</td>
     </tr>
   )
