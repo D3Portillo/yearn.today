@@ -1,3 +1,4 @@
+import { useBalance as useWagmiBalance } from "wagmi"
 import type { TokenAllowance, TokenBalance, Vault } from "@yfi/sdk"
 import { useEffect, useState } from "react"
 import { useYearnContext } from "./contexts/Yearn"
@@ -57,11 +58,17 @@ export const useRawTokenBalance = (
   tokenAddress?: string
 ) => {
   const client = useYearnClient()
-  const [balance, setBalance] = useState(
+  const [vaultBalance, setVaultBalance] = useState(
     {} as Pick<TokenBalance, "address" | "balanceUsdc" | "priceUsdc"> & {
       balance: number
+      symbol: string
     }
   )
+  const { data } = useWagmiBalance({
+    address: address as any,
+    token: tokenAddress as any,
+    watch: true,
+  })
 
   useEffect(() => {
     if (address && tokenAddress) {
@@ -70,13 +77,18 @@ export const useRawTokenBalance = (
         .then(([balance]) => {
           if (balance) {
             // Fetch for connected address balance for vault token
-            setBalance(balance as any)
+            setVaultBalance(balance as any)
           }
         })
     }
-  }, [address, tokenAddress])
+    // Refetch when wagmi balance updates
+  }, [address, tokenAddress, data?.formatted])
 
-  return balance
+  return {
+    ...vaultBalance,
+    balance: data?.value || 0,
+    symbol: data?.symbol,
+  }
 }
 
 /**
@@ -89,8 +101,8 @@ export const useBalanceUSDC = (
   tokenAddress?: string
 ) => {
   const [balance, setBalance] = useState("0")
-
   const tokenBalance = useRawTokenBalance(address, tokenAddress)
+
   useEffect(() => {
     if (tokenBalance.address) {
       setBalance(formatUSDC(tokenBalance.balanceUsdc))
