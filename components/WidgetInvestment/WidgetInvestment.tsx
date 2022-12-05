@@ -9,9 +9,11 @@ import Deposit from "./Deposit"
 function WidgetInvestment({
   vaultAddress,
   maxWidth = "max-w-sm",
+  rounded,
 }: {
   vaultAddress: string
   maxWidth?: string
+  rounded?: string
 }) {
   const yVault = useVault(vaultAddress)
   const withdrawMachine = useOnOffMachine()
@@ -22,8 +24,8 @@ function WidgetInvestment({
   }
 
   return (
-    <CardContainer className={`w-full ${maxWidth}`}>
-      <nav className="w-full flex text-xl">
+    <CardContainer rounded={rounded} className={`w-full ${maxWidth}`}>
+      <nav className="w-full flex text-xl mb-2">
         <TabButton
           isActive={withdrawMachine.isOff}
           onClick={withdrawMachine.turnOff}

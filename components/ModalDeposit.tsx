@@ -6,8 +6,16 @@ function ModalDeposit({
   ...modalProps
 }: ModalProps & { vaultAddress: string }) {
   return (
-    <PrimitiveModal maxWidth="flex w-full max-w-md" {...modalProps}>
-      <WidgetInvestment maxWidth="" vaultAddress={vaultAddress} />
+    <PrimitiveModal
+      items="items-end lg:items-center"
+      maxWidth="flex w-full max-w-md"
+      {...modalProps}
+    >
+      <WidgetInvestment
+        rounded="rounded-t-xl lg:rounded-xl min-h-[21rem]"
+        maxWidth=""
+        vaultAddress={vaultAddress}
+      />
     </PrimitiveModal>
   )
 }
