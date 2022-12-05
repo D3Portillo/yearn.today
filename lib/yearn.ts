@@ -36,6 +36,8 @@ export const useAllowance = (
 ) => {
   const client = useYearnClient()
   const [allowance, setAllowance] = useState({} as Partial<TokenAllowance>)
+  const [count, setCount] = useState(0)
+  const refetch = () => setCount((n) => n + 1)
 
   useEffect(() => {
     if (holderAddress && vaultAddress && tokenAddress) {
@@ -48,9 +50,12 @@ export const useAllowance = (
         .then(setAllowance)
         .catch(noOp)
     }
-  }, [holderAddress, vaultAddress, tokenAddress])
+  }, [holderAddress, vaultAddress, tokenAddress, count])
 
-  return allowance
+  return {
+    refetch,
+    ...allowance,
+  }
 }
 
 export const useRawTokenBalance = (
@@ -86,7 +91,7 @@ export const useRawTokenBalance = (
 
   return {
     ...vaultBalance,
-    balance: data?.value || 0,
+    balance: data?.value.toString() || 0,
     symbol: data?.symbol,
   }
 }
