@@ -36,11 +36,14 @@ function VaultList() {
         <table className="w-full">
           <thead>
             <tr className="text-left">
-              <th colSpan={2}>Name</th>
-              <th className="px-4 py-2">TVL</th>
-              <th className="px-4 py-2 whitespace-nowrap">Your Deposits</th>
+              <th className="min-w-[6rem]" colSpan={2}>
+                Name
+              </th>
+              <th className="px-4 py-2 min-w-[12rem]">TVL</th>
+              <th className="px-4 py-2 whitespace-nowrap min-w-[10rem]">
+                Your Deposits
+              </th>
               <th className="px-4 py-2">Version</th>
-              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -68,13 +71,14 @@ const vaultLoadingItemsList = [...Array(3)].map((_, i) => (
 
 function VaultLoadingState() {
   return (
-    <tr className="text-left">
-      <td colSpan={2}>
-        <div className="bg-zinc-100 h-12 rounded-lg" />
-      </td>
-      {[...Array(4)].map((_, i) => {
+    <tr>
+      {[...Array(3)].map((_, i) => {
         return (
-          <td key={`loading-cell-${i}`} className="p-2">
+          <td
+            colSpan={i % 2 == 0 ? 2 : undefined}
+            key={`loading-cell-${i}`}
+            className="p-2"
+          >
             <div className="bg-zinc-100 h-12 rounded-lg animate-pulse" />
           </td>
         )
