@@ -44,7 +44,7 @@ function Vault({
       <td className="px-2 py-4 whitespace-nowrap">
         {formatCurreny(tvl.tvl)} USD
       </td>
-      <td className="px-2 py-4">
+      <td data-title="deposits" className="px-2 py-4">
         {holderAddress ? `${formatCurreny(holderInvestment)} USD` : "-"}
       </td>
       <td>

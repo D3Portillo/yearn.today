@@ -35,7 +35,7 @@ function InputNumber<InputValueType = string>({
         value={value as any}
         className="block bg-transparent w-full p-2 outline-none"
         onChange={({ target }) => handleOnChange(target.value as any)}
-        placeholder="0.000"
+        placeholder="0"
         name="amount"
         required
       />
