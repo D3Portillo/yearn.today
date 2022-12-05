@@ -20,7 +20,7 @@ export default function VaultPage() {
   const vault = useVault(id)
   const { formatted: vaultAPY } = useVaultAPY(vault)
   const { address } = useAccount()
-  const holderBalance = useBalanceUSDC(address, vault.token)
+  const holderBalance = useBalanceUSDC(address, vault.address)
 
   return (
     <MainLayout
