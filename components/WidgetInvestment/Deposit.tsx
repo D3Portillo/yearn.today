@@ -10,6 +10,7 @@ import {
   useVault,
   useYearnClient,
 } from "@/lib/yearn"
+import useToastTransaction from "@/lib/hooks/useToastTransaction"
 import { formatNumberUnits } from "@/lib/numbers"
 import Button from "@/components/Button"
 import BannerEarnings from "./BannerEarnings"
@@ -33,29 +34,21 @@ function Deposit({
     vaultAddress,
     tokenAddress
   )
-
+  const { toastTransaction } = useToastTransaction()
   const { balance } = useRawTokenBalance(address, tokenAddress)
   const maxDeposit = yVault.metadata?.depositLimit
 
   const formattedBalance = formatNumberUnits(balance, yVault.decimals)
   function handleApprove() {
     if (!address) return toast.error("You must connect to continue")
-    else {
-      let toaster = toast.loading("Working...")
-      client.vaults
-        .approveDeposit(address, vaultAddress, tokenAddress, maxDeposit)
-        .then(async (tx) => {
-          await tx?.wait()
-          toast.success("Tx Confirmed")
-        })
-        .catch((error) => {
-          toast.error("Oops something went wrong")
-          console.error({ error })
-        })
-        .finally(() => {
-          toast.dismiss(toaster)
-        })
-    }
+    toastTransaction(
+      client.vaults.approveDeposit(
+        address,
+        vaultAddress,
+        tokenAddress,
+        maxDeposit
+      )
+    )
   }
 
   function handleConfirm() {
@@ -63,25 +56,14 @@ function Deposit({
     if (amount > balance) {
       return toast.error("You don't own that much assets")
     }
-    let toaster = toast.loading("Working...")
-    client.vaults
-      .deposit(
+    toastTransaction(
+      client.vaults.deposit(
         vaultAddress,
         tokenAddress,
         utils.parseUnits(amount as any, yVault.decimals) as any,
         address
       )
-      .then(async (tx) => {
-        await tx?.wait()
-        toast.success("Yaaay!")
-      })
-      .catch((error) => {
-        toast.error("Oops something went wrong")
-        console.error({ error })
-      })
-      .finally(() => {
-        toast.dismiss(toaster)
-      })
+    )
   }
 
   const hideApproveButton = depositAllowance.amount

@@ -7,6 +7,7 @@ import { withPreventDefault } from "@/lib/inputs"
 import { formatCurreny } from "@/lib/currency"
 import { useRawTokenBalance, useVault, useYearnClient } from "@/lib/yearn"
 import { formatNumberUnits, formatUnits, formatUSDC } from "@/lib/numbers"
+import useToastTransaction from "@/lib/hooks/useToastTransaction"
 
 import Button from "@/components/Button"
 import InputNumber from "./InputNumber"
@@ -28,6 +29,7 @@ function Withdraw({
     vaultAddress
   )
   const rawHolderBalance = formatUnits(balance, yVault.decimals!)
+  const { toastTransaction } = useToastTransaction()
 
   useEffect(() => {
     if (address) {
@@ -46,25 +48,14 @@ function Withdraw({
     if ((amount as any) > balance) {
       return toast.error("You don't own that much assets")
     }
-    let toaster = toast.loading("Working...")
-    client.vaults
-      .withdraw(
+    toastTransaction(
+      client.vaults.withdraw(
         vaultAddress,
         tokenAddress,
         utils.parseUnits(amount, yVault.decimals) as any,
         address
       )
-      .then(async (tx) => {
-        await tx?.wait()
-        toast.success("Yaaay!")
-      })
-      .catch((error) => {
-        toast.error("Oops something went wrong")
-        console.error({ error })
-      })
-      .finally(() => {
-        toast.dismiss(toaster)
-      })
+    )
   }
 
   return (
@@ -90,4 +81,5 @@ function Withdraw({
     </form>
   )
 }
+
 export default Withdraw
