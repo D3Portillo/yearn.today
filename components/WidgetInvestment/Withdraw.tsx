@@ -43,12 +43,15 @@ function Withdraw({
     // Also update when balance changes
   }, [address, balance])
 
-  function handleConfirm() {
+  async function handleConfirm() {
     if (!address) return toast.error("You must connect to continue")
-    if ((amount as any) > balance) {
+    if ((amount as any) == 0) {
+      return toast.error("Value cannot be zero")
+    }
+    if (amount > balance) {
       return toast.error("You don't own that much assets")
     }
-    toastTransaction(
+    await toastTransaction(
       client.vaults.withdraw(
         vaultAddress,
         tokenAddress,
@@ -56,6 +59,8 @@ function Withdraw({
         address
       )
     )
+    // reset input
+    setAmount("0")
   }
 
   return (

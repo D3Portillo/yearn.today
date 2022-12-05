@@ -39,9 +39,10 @@ function Deposit({
   const maxDeposit = yVault.metadata?.depositLimit
 
   const formattedBalance = formatNumberUnits(balance, yVault.decimals)
-  function handleApprove() {
+
+  async function handleApprove() {
     if (!address) return toast.error("You must connect to continue")
-    toastTransaction(
+    await toastTransaction(
       client.vaults.approveDeposit(
         address,
         vaultAddress,
@@ -49,14 +50,18 @@ function Deposit({
         maxDeposit
       )
     )
+    depositAllowance.refetch()
   }
 
-  function handleConfirm() {
+  async function handleConfirm() {
     if (!address) return toast.error("You must connect to continue")
+    if (amount == 0) {
+      return toast.error("Balance is zero")
+    }
     if (amount > balance) {
       return toast.error("You don't own that much assets")
     }
-    toastTransaction(
+    await toastTransaction(
       client.vaults.deposit(
         vaultAddress,
         tokenAddress,
@@ -64,6 +69,8 @@ function Deposit({
         address
       )
     )
+    // reset input
+    setAmount(0)
   }
 
   const hideApproveButton = depositAllowance.amount
