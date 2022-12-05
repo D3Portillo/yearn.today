@@ -10,7 +10,7 @@ const BalanceNumberFormatter = new Intl.NumberFormat("en-US", {
 
 const CompactNumberFormatter = new Intl.NumberFormat("en-US", {
   notation: "compact",
-  maximumFractionDigits: 1,
+  maximumFractionDigits: 2,
 })
 
 export const formatNumber = (value: any) => NumberFormatter.format(value || 0)
