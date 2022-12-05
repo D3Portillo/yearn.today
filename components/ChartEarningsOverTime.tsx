@@ -31,15 +31,20 @@ function ChartEarningsOverTime({
   }, [])
 
   useEffect(() => {
+    const dataNumberList = [] as number[]
     const data = historicEarnings
       .filter(({ date }, idx, arr) => {
-        if (date == arr[idx - 1]?.date) return false
-        return true
+        // if following dates are identical, remove
+        return !(date === arr[idx - 1]?.date)
       })
       .map(({ date, earnings }) => {
+        dataNumberList.push(earnings.amountUsdc as any)
         return [date, earnings.amountUsdc]
       })
-    chart.setOption(createChartConfig(data))
+    // At least show 1,2,3,4 points for Yaxis
+    if (dataNumberList.length === 0) dataNumberList.push(4)
+    const minValue = Math.min(...dataNumberList)
+    chart.setOption(createChartConfig(data, minValue))
     // only trigger re-paint on arra len change to avoid the whole shallow object evaluation
   }, [historicEarnings.length])
 
@@ -52,13 +57,10 @@ function ChartEarningsOverTime({
   )
 }
 
-function createChartConfig(data: string[][]) {
+function createChartConfig(data: string[][], minValue: number) {
   return {
     tooltip: {
       trigger: "axis",
-      position: function (pt: any) {
-        return [pt[0], "10%"]
-      },
     },
     xAxis: {
       type: "time",
@@ -73,11 +75,11 @@ function createChartConfig(data: string[][]) {
         },
       },
       splitNumber: 3,
-      min: 0,
+      min: minValue,
     },
     grid: {
       height: 180,
-      left: 40,
+      left: 56,
       right: 0,
       top: 40,
     },
