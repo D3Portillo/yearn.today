@@ -37,9 +37,9 @@ function VaultList() {
           <thead>
             <tr className="text-left">
               <th colSpan={2}>Name</th>
-              <th className="p-2">Version</th>
-              <th className="p-2">TVL</th>
-              <th className="p-2">Your Deposits</th>
+              <th className="px-4 py-2">TVL</th>
+              <th className="px-4 py-2 whitespace-nowrap">Your Deposits</th>
+              <th className="px-4 py-2">Version</th>
               <th></th>
             </tr>
           </thead>

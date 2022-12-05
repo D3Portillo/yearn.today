@@ -15,6 +15,7 @@ function Vault({
   holderAddress,
   onOpenModal,
   version,
+  display_name,
 }: YDaemonVault & {
   holderAddress: string
   onOpenModal(): void
@@ -36,18 +37,19 @@ function Vault({
       onClick={handleRowClick}
       className="border-t hover:bg-[rgba(0,0,0,0.022)] cursor-pointer border-zinc-100"
     >
-      <td className="p-2 w-12 min-w-[3rem]">
+      <td className="px-2 w-12 min-w-[3rem]">
         <Image alt="" width={42} height={42} src={icon} />
       </td>
-      <td className="px-2 py-4 whitespace-nowrap">{name}</td>
-      <td className="px-2 py-4">{version}</td>
-      <td className="px-2 py-4 whitespace-nowrap">
-        {formatCurreny(tvl.tvl)} USD
+      <td className="p-4 whitespace-nowrap">
+        <span className="hidden md:inline">{name}</span>
+        <span className="md:hidden">{display_name}</span>
       </td>
-      <td data-title="deposits" className="px-2 py-4">
+      <td className="p-4 whitespace-nowrap">{formatCurreny(tvl.tvl)} USD</td>
+      <td data-title="deposits" className="px-4 py-4 whitespace-nowrap">
         {holderAddress ? `${formatCurreny(holderInvestment)} USD` : "-"}
       </td>
-      <td>
+      <td className="p-4">{version}</td>
+      <td className="px-4">
         <div className="flex justify-end items-center">
           <div
             onClick={(e) => e.stopPropagation()}
