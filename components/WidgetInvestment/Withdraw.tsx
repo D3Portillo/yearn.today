@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useAccount } from "wagmi"
 import toast from "react-hot-toast"
 import { utils } from "ethers"
@@ -18,17 +18,28 @@ function Withdraw({
   vault: { tokenAddress: string; vaultAddress: string }
 }) {
   const { tokenAddress, vaultAddress } = vault
-
+  const [holderEarnings, setHolderEarnings] = useState("0")
   const [amount, setAmount] = useState("0")
   const client = useYearnClient()
   const yVault = useVault(vaultAddress)
   const { address } = useAccount()
-  const {
-    priceUsdc: vaultTokenPrice,
-    balanceUsdc,
-    balance,
-  } = useRawTokenBalance(address, vaultAddress)
+  const { priceUsdc: vaultTokenPrice, balance } = useRawTokenBalance(
+    address,
+    vaultAddress
+  )
   const rawHolderBalance = formatUnits(balance, yVault.decimals!)
+
+  useEffect(() => {
+    if (address) {
+      client.earnings.accountAssetsData(address).then((earnings) => {
+        const poolEarning = earnings.earningsAssetData.find(
+          (asset) => asset.assetAddress === vaultAddress
+        )
+        setHolderEarnings(poolEarning?.earned || "0")
+      })
+    }
+    // Also update when balance changes
+  }, [address, balance])
 
   function handleConfirm() {
     if (!address) return toast.error("You must connect to continue")
@@ -70,7 +81,7 @@ function Withdraw({
         <Row title={`Balance/ ${yVault.symbol || "Token"}`}>
           {formatNumberUnits(balance, yVault.decimals)}
         </Row>
-        <Row title="Investment">{formatCurreny(formatUSDC(balanceUsdc))}</Row>
+        <Row title="Earned">{formatCurreny(formatUSDC(holderEarnings))}</Row>
         <Row title="Price">${formatUSDC(vaultTokenPrice)}</Row>
       </Table>
       <Button type="submit" fontSize="text-xl">

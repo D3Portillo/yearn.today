@@ -8,7 +8,7 @@ import {
 } from "react"
 import { JsonRpcProvider } from "@ethersproject/providers"
 import { ALCHEMY_URL } from "@/lib/constants"
-import { useAccount, useProvider, useSigner } from "wagmi"
+import { useSigner } from "wagmi"
 
 const CHAIN_ID = 1
 export const YearnContext = createContext({
@@ -23,6 +23,10 @@ export const YearnClientProvider = ({ children }: PropsWithChildren) => {
   const client = useMemo(() => {
     return new Yearn(CHAIN_ID, {
       provider: new JsonRpcProvider(ALCHEMY_URL),
+      subgraph: {
+        mainnetSubgraphEndpoint:
+          "https://api.thegraph.com/subgraphs/name/rareweasel/yearn-vaults-v2-subgraph-mainnet",
+      },
     })
   }, [])
 
