@@ -1,14 +1,10 @@
+import type { YVault } from "@/types/shared"
 import { useState } from "react"
 import toast from "react-hot-toast"
 import { utils } from "ethers"
 
 import { withPreventDefault } from "@/lib/inputs"
-import {
-  useAllowance,
-  useRawTokenBalance,
-  useVault,
-  useYearnClient,
-} from "@/lib/yearn"
+import { useAllowance, useRawTokenBalance, useYearnClient } from "@/lib/yearn"
 import useConnectedAddress from "@/lib/hooks/useConnectedAddress"
 import useToastTransaction from "@/lib/hooks/useToastTransaction"
 import { formatNumberUnits } from "@/lib/numbers"
@@ -18,16 +14,17 @@ import InputNumber from "./InputNumber"
 import Table, { Row } from "./Table"
 
 function Deposit({
-  vault,
+  vaultAddress,
+  yVault,
 }: {
-  vault: { tokenAddress: string; vaultAddress: string }
+  yVault: Partial<YVault>
+  vaultAddress: string
 }) {
-  const { vaultAddress, tokenAddress } = vault
+  const { token: tokenAddress } = yVault as { token: string }
 
   const [amount, setAmount] = useState(0)
   const address = useConnectedAddress()
   const client = useYearnClient()
-  const yVault = useVault(vaultAddress)
   const depositAllowance = useAllowance(
     "deposit",
     address,

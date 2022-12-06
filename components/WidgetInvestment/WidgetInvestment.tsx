@@ -18,11 +18,6 @@ function WidgetInvestment({
   const yVault = useVault(vaultAddress)
   const withdrawMachine = useOnOffMachine()
 
-  const vault = {
-    tokenAddress: yVault?.token!,
-    vaultAddress,
-  }
-
   return (
     <CardContainer rounded={rounded} className={`w-full ${maxWidth}`}>
       <nav className="w-full flex text-xl mb-2">
@@ -40,9 +35,9 @@ function WidgetInvestment({
         </TabButton>
       </nav>
       {withdrawMachine.isOn ? (
-        <Withdraw vault={vault} />
+        <Withdraw yVault={yVault} vaultAddress={vaultAddress} />
       ) : (
-        <Deposit vault={vault} />
+        <Deposit yVault={yVault} vaultAddress={vaultAddress} />
       )}
     </CardContainer>
   )

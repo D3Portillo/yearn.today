@@ -1,10 +1,11 @@
+import type { YVault } from "@/types/shared"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
 import { utils } from "ethers"
 
 import { withPreventDefault } from "@/lib/inputs"
 import { formatCurreny } from "@/lib/currency"
-import { useRawTokenBalance, useVault, useYearnClient } from "@/lib/yearn"
+import { useRawTokenBalance, useYearnClient } from "@/lib/yearn"
 import { formatNumberUnits, formatUnits, formatUSDC } from "@/lib/numbers"
 import useToastTransaction from "@/lib/hooks/useToastTransaction"
 import useConnectedAddress from "@/lib/hooks/useConnectedAddress"
@@ -14,19 +15,21 @@ import InputNumber from "./InputNumber"
 import Table, { Row } from "./Table"
 
 function Withdraw({
-  vault,
+  vaultAddress,
+  yVault,
 }: {
-  vault: { tokenAddress: string; vaultAddress: string }
+  yVault: Partial<YVault>
+  vaultAddress: string
 }) {
-  const { tokenAddress, vaultAddress } = vault
+  const { token: tokenAddress } = yVault as { token: string }
+
+  const client = useYearnClient()
+  const address = useConnectedAddress()
   const [holderEarnings, setHolderEarnings] = useState("0")
   const [amount, setAmount] = useState("0")
-  const client = useYearnClient()
-  const yVault = useVault(vaultAddress)
-  const address = useConnectedAddress()
   const { tokenPriceUSD, balance } = useRawTokenBalance(address, vaultAddress)
-  const rawHolderBalance = formatUnits(balance, yVault.decimals!)
   const { toastTransaction } = useToastTransaction()
+  const rawHolderBalance = formatUnits(balance, yVault.decimals!)
 
   useEffect(() => {
     if (address) {
