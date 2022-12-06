@@ -1,6 +1,7 @@
 import { useBalance as useWagmiBalance } from "wagmi"
-import type { TokenAllowance, TokenBalance, Vault } from "@yfi/sdk"
+import type { TokenAllowance, Vault } from "@yfi/sdk"
 import { useEffect, useState } from "react"
+
 import { useYearnContext } from "./contexts/Yearn"
 import { formatNumber, formatUSDC } from "./numbers"
 import { noOp } from "./helpers"
@@ -19,7 +20,7 @@ export const useVault = (vaultAddress: string) => {
       client.vaults
         .get([vaultAddress])
         .then(([vault]) => {
-          if (vault) setVault(vault)
+          setVault(vault || {})
         })
         .catch(noOp)
     }
@@ -63,12 +64,7 @@ export const useRawTokenBalance = (
   tokenAddress?: string
 ) => {
   const client = useYearnClient()
-  const [vaultBalance, setVaultBalance] = useState(
-    {} as Pick<TokenBalance, "address" | "balanceUsdc" | "priceUsdc"> & {
-      balance: number
-      symbol: string
-    }
-  )
+  const [tokenPriceUSD, setTokenPriceUSD] = useState<number>(0)
   const { data } = useWagmiBalance({
     address: address as any,
     token: tokenAddress as any,
@@ -76,45 +72,41 @@ export const useRawTokenBalance = (
   })
 
   useEffect(() => {
-    if (address && tokenAddress) {
+    if (tokenAddress && address) {
       client.services.helper
-        .tokenBalances(address, [tokenAddress])
-        .then(([balance]) => {
-          if (balance) {
-            // Fetch for connected address balance for vault token
-            setVaultBalance(balance as any)
-          }
+        .tokenPrices([tokenAddress])
+        .then(([token]) => {
+          setTokenPriceUSD(formatUSDC(token?.priceUsdc || 0) as any)
         })
+        .catch(noOp)
+    } else {
+      setTokenPriceUSD(0)
     }
-    // Refetch when wagmi balance updates
+    // change when connected address change, token or wagmi.balance updates
   }, [address, tokenAddress, data?.formatted])
 
+  const balance = (data?.value.toString() || 0) as string | number
+  const formattedBalance = (data?.formatted || 0) as number
   return {
-    ...vaultBalance,
-    balance: data?.value.toString() || 0,
+    balance,
+    formattedBalance,
+    tokenPriceUSD,
+    balanceUSD: formattedBalance * tokenPriceUSD,
     symbol: data?.symbol,
   }
 }
 
 /**
- * Get balance for a token holder in USDC
+ * Get balance for a token holder in USD
  * @param address tokenHolder address
  * @param tokenAddress asset address
  */
-export const useBalanceUSDC = (
+export const useBalanceUSD = (
   address: string | undefined,
   tokenAddress?: string
 ) => {
-  const [balance, setBalance] = useState("0")
   const tokenBalance = useRawTokenBalance(address, tokenAddress)
-
-  useEffect(() => {
-    if (tokenBalance.address) {
-      setBalance(formatUSDC(tokenBalance.balanceUsdc))
-    }
-  }, [tokenBalance.address])
-
-  return balance
+  return tokenBalance.balanceUSD
 }
 
 export const useVaultAPY = (vault: Partial<Vault>) => {

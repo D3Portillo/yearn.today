@@ -4,7 +4,7 @@
  */
 
 import { useEffect, useState } from "react"
-import { useAccount } from "wagmi"
+import useConnectedAddress from "./hooks/useConnectedAddress"
 
 const colors = [
   "#FC5C54",
@@ -90,7 +90,7 @@ function emojiAvatarForAddress(address: string) {
 }
 
 export const useEmojiAvatar = (address?: string) => {
-  const { address: connectedAddr } = useAccount()
+  const connectedAddr = useConnectedAddress()
   const [avatar, setAvatar] = useState({
     color: "#FFE8E8",
     emoji: "👻",
