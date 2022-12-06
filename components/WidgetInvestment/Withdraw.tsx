@@ -29,7 +29,7 @@ function Withdraw({
   const [amount, setAmount] = useState("0")
   const { tokenPriceUSD, balance } = useRawTokenBalance(address, vaultAddress)
   const { toastTransaction } = useToastTransaction()
-  const rawHolderBalance = formatUnits(balance, yVault.decimals!)
+  const rawHolderBalance = formatUnits(balance, yVault.decimals || 0)
 
   useEffect(() => {
     if (address) {
