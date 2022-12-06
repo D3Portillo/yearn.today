@@ -1,8 +1,12 @@
+import { Vault } from "@yfi/sdk"
 import { type PropsWithChildren } from "react"
 
 export type PropsWithChildrenCx<Props = unknown> = PropsWithChildren<Props> & {
   className?: string
 }
+
+/** Yearn Vault */
+export type YVault = Vault
 
 export type YDaemonVault = {
   address: string
