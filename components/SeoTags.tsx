@@ -2,21 +2,24 @@ import { NextSeo } from "next-seo"
 import { useMemo } from "react"
 
 const URL = "https://yearn.today"
-const TWITTER_HANDLE = "Interlacehq"
-export const DEFAULT_CONFIG = {
+const TWITTER_HANDLE = "YearnToday"
+export const DEFAULT_SEO = {
   title: "YieldEarn Yoday 💸",
   url: URL,
-  seoURL: `${URL}/seo.png`,
+  imageURL: `${URL}/seo.png`,
   description: "💸 Invest on stable vaults to earn constant rewards.",
 }
 
-function SeoTags(props: Partial<typeof DEFAULT_CONFIG>) {
+type SeoDefinitions = typeof DEFAULT_SEO
+function SeoTags(props: Partial<SeoDefinitions> = {}) {
   const SEO = useMemo(() => {
-    return Object.keys(DEFAULT_CONFIG).reduce((obj, key) => {
-      // if prop.value is defined then replace default SEO
-      const value = (props as any)[key] as any
-      return Object.assign(obj, value ? { [key]: value } : {})
-    }, DEFAULT_CONFIG)
+    return Object.keys(DEFAULT_SEO).reduce((currentDef, _key: any) => {
+      const key = _key as keyof SeoDefinitions
+      return {
+        ...currentDef,
+        [key]: props[key] || currentDef[key],
+      }
+    }, DEFAULT_SEO)
   }, [props])
 
   return (
@@ -40,11 +43,12 @@ function SeoTags(props: Partial<typeof DEFAULT_CONFIG>) {
         title: SEO.title,
         description: SEO.description,
         images: [
+          // located at -> /public/seo.png
           {
-            url: SEO.seoURL,
-            alt: SEO.seoURL,
-            width: 1000, // 1200,
-            height: 1000, // 630,
+            url: SEO.imageURL,
+            alt: SEO.imageURL,
+            width: 1200,
+            height: 630,
           },
         ],
       }}
