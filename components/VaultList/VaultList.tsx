@@ -1,22 +1,16 @@
 import type { YDaemonVault } from "@/types/shared"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useAccount } from "wagmi"
 
-import ff from "@/lib/services/ff"
 import useOnOffMachine from "@/lib/hooks/useOnOffMachine"
 import CardContainer from "@/components/layout/CardContainer"
 import ModalDeposit from "@/components/ModalDeposit"
 import Vault from "./Vault"
 
-function VaultList() {
+function VaultList({ vaults }: { vaults: YDaemonVault[] }) {
   const { address } = useAccount()
   const modalMachine = useOnOffMachine()
   const [vaultAddress, setVaultAddress] = useState("")
-  const [list, setList] = useState<YDaemonVault[]>([])
-
-  useEffect(() => {
-    ff.get<YDaemonVault[]>(["/vaults"]).then(setList)
-  }, [])
 
   function handleOpenModal(vaultAddress: string) {
     setVaultAddress(vaultAddress)
@@ -47,8 +41,8 @@ function VaultList() {
             </tr>
           </thead>
           <tbody>
-            {list.length === 0 && vaultLoadingItemsList}
-            {list.map((vault) => {
+            {vaults.length === 0 && vaultLoadingItemsList}
+            {vaults.map((vault) => {
               return (
                 <Vault
                   key={`vault-${vault.symbol}-${vault.address}`}
