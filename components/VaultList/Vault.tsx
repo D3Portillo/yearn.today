@@ -3,7 +3,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { FaChevronRight } from "react-icons/fa"
 
-import { useBalanceUSDC } from "@/lib/yearn"
+import { useBalanceUSD } from "@/lib/yearn"
 import { formatCurreny } from "@/lib/currency"
 import { useRouter } from "next/router"
 
@@ -21,7 +21,7 @@ function Vault({
   onOpenModal(): void
 }) {
   const router = useRouter()
-  const holderInvestment = useBalanceUSDC(holderAddress, address)
+  const holderInvestment = useBalanceUSD(holderAddress, address)
 
   function handleRowClick() {
     router.push({

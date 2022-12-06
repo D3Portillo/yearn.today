@@ -5,6 +5,7 @@ import { useAccount } from "wagmi"
 import asset_logo from "@/assets/logo.svg"
 import { beautifyAddress } from "@/lib/helpers"
 import { useEmojiAvatar } from "@/lib/emojiAvatarForAddress"
+import useConnectedAddress from "@/lib/hooks/useConnectedAddress"
 import Button from "./Button"
 import Link from "next/link"
 
@@ -28,7 +29,7 @@ function Navigation() {
 }
 
 function ProfileButton({ onClick }: { onClick: any }) {
-  const { address } = useAccount()
+  const address = useConnectedAddress()
   const avatar = useEmojiAvatar()
   const formattedAddress = address ? beautifyAddress(address) : address
 

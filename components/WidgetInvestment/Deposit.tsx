@@ -1,5 +1,4 @@
 import { useState } from "react"
-import { useAccount } from "wagmi"
 import toast from "react-hot-toast"
 import { utils } from "ethers"
 
@@ -10,6 +9,7 @@ import {
   useVault,
   useYearnClient,
 } from "@/lib/yearn"
+import useConnectedAddress from "@/lib/hooks/useConnectedAddress"
 import useToastTransaction from "@/lib/hooks/useToastTransaction"
 import { formatNumberUnits } from "@/lib/numbers"
 import Button from "@/components/Button"
@@ -25,9 +25,9 @@ function Deposit({
   const { vaultAddress, tokenAddress } = vault
 
   const [amount, setAmount] = useState(0)
+  const address = useConnectedAddress()
   const client = useYearnClient()
   const yVault = useVault(vaultAddress)
-  const { address } = useAccount()
   const depositAllowance = useAllowance(
     "deposit",
     address,

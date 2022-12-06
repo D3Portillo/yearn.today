@@ -1,14 +1,14 @@
 import type { YDaemonVault } from "@/types/shared"
 import { useState } from "react"
-import { useAccount } from "wagmi"
 
+import useConnectedAddress from "@/lib/hooks/useConnectedAddress"
 import useOnOffMachine from "@/lib/hooks/useOnOffMachine"
 import CardContainer from "@/components/layout/CardContainer"
 import ModalDeposit from "@/components/ModalDeposit"
 import Vault from "./Vault"
 
 function VaultList({ vaults }: { vaults: YDaemonVault[] }) {
-  const { address } = useAccount()
+  const address = useConnectedAddress()
   const modalMachine = useOnOffMachine()
   const [vaultAddress, setVaultAddress] = useState("")
 

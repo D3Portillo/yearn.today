@@ -1,11 +1,11 @@
 import Link from "next/link"
-import { useAccount } from "wagmi"
 import { useRouter } from "next/router"
 import { FiArrowUpRight } from "react-icons/fi"
 
 import { formatCurreny } from "@/lib/currency"
 import { formatUSDC } from "@/lib/numbers"
-import { useBalanceUSDC, useVault, useVaultAPY } from "@/lib/yearn"
+import { useBalanceUSD, useVault, useVaultAPY } from "@/lib/yearn"
+import useConnectedAddress from "@/lib/hooks/useConnectedAddress"
 
 import Table, { Row } from "@/components/WidgetInvestment/Table"
 import AssetImage from "@/components/AssetImage"
@@ -19,8 +19,8 @@ export default function VaultPage() {
   const { id } = useRouter().query as { id: string }
   const vault = useVault(id)
   const { formatted: vaultAPY } = useVaultAPY(vault)
-  const { address } = useAccount()
-  const holderBalance = useBalanceUSDC(address, vault.address)
+  const address = useConnectedAddress()
+  const holderBalance = useBalanceUSD(address, vault.address)
 
   return (
     <MainLayout

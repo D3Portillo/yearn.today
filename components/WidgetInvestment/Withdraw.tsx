@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import { useAccount } from "wagmi"
 import toast from "react-hot-toast"
 import { utils } from "ethers"
 
@@ -8,6 +7,7 @@ import { formatCurreny } from "@/lib/currency"
 import { useRawTokenBalance, useVault, useYearnClient } from "@/lib/yearn"
 import { formatNumberUnits, formatUnits, formatUSDC } from "@/lib/numbers"
 import useToastTransaction from "@/lib/hooks/useToastTransaction"
+import useConnectedAddress from "@/lib/hooks/useConnectedAddress"
 
 import Button from "@/components/Button"
 import InputNumber from "./InputNumber"
@@ -23,11 +23,8 @@ function Withdraw({
   const [amount, setAmount] = useState("0")
   const client = useYearnClient()
   const yVault = useVault(vaultAddress)
-  const { address } = useAccount()
-  const { priceUsdc: vaultTokenPrice, balance } = useRawTokenBalance(
-    address,
-    vaultAddress
-  )
+  const address = useConnectedAddress()
+  const { tokenPriceUSD, balance } = useRawTokenBalance(address, vaultAddress)
   const rawHolderBalance = formatUnits(balance, yVault.decimals!)
   const { toastTransaction } = useToastTransaction()
 
@@ -78,7 +75,7 @@ function Withdraw({
           {formatNumberUnits(balance, yVault.decimals)}
         </Row>
         <Row title="Earned">{formatCurreny(formatUSDC(holderEarnings))}</Row>
-        <Row title="Price">${formatUSDC(vaultTokenPrice)}</Row>
+        <Row title="Price">${tokenPriceUSD}</Row>
       </Table>
       <Button type="submit" fontSize="text-xl">
         Withdraw
