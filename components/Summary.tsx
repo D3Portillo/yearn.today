@@ -1,14 +1,14 @@
-import { type PropsWithChildren, useEffect, useState } from "react"
-import { type VaultsUserSummary } from "@yfi/sdk"
+import type { PropsWithChildrenCx } from "@/types/shared"
+import type { VaultsUserSummary } from "@yfi/sdk"
+import { useEffect, useState } from "react"
 
 import useConnectedAddress from "@/lib/hooks/useConnectedAddress"
 import { useYearnClient } from "@/lib/yearn"
-import { noOp } from "@/lib/helpers"
 import { formatNumber, formatUSDC } from "@/lib/numbers"
 import { formatCurreny } from "@/lib/currency"
+import { noOp } from "@/lib/helpers"
 
 import CardContainer from "./layout/CardContainer"
-import { PropsWithChildrenCx } from "@/types/shared"
 
 function Summary() {
   const [summary, setSummary] = useState<VaultsUserSummary>({} as any)
