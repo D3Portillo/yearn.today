@@ -4,10 +4,12 @@ import { getAllVaults } from "@/lib/services/vaults"
 
 import VaultList from "@/components/VaultList"
 import MainLayout from "@/components/layout/MainLayout"
+import Summary from "@/components/Summary"
 
 export default function Home({ vaults }: { vaults: YDaemonVault[] }) {
   return (
     <MainLayout>
+      <Summary />
       <VaultList vaults={vaults} />
     </MainLayout>
   )
