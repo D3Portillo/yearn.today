@@ -8,6 +8,7 @@ import { formatNumber, formatUSDC } from "@/lib/numbers"
 import { formatCurreny } from "@/lib/currency"
 import { noOp } from "@/lib/helpers"
 
+import TooltipEarnings from "./TooltipEarnings"
 import CardContainer from "./layout/CardContainer"
 
 function Summary() {
@@ -28,8 +29,8 @@ function Summary() {
           {formatCurreny(formatUSDC(summary.holdings))}
         </Section>
         <Separator />
-        <Section title="Earnings">
-          {formatCurreny(formatUSDC(summary.earnings))}
+        <Section title="Total Earnings">
+          <TooltipEarnings earnings={formatUSDC(summary.earnings)} />
         </Section>
         <Separator className="hidden md:block" />
         <Section className="hidden md:block" title="Current APY">

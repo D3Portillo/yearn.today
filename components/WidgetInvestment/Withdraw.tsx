@@ -4,13 +4,13 @@ import toast from "react-hot-toast"
 import { utils } from "ethers"
 
 import { withPreventDefault } from "@/lib/inputs"
-import { formatCurreny } from "@/lib/currency"
 import { useRawTokenBalance, useYearnClient } from "@/lib/yearn"
 import { formatNumberUnits, formatUnits, formatUSDC } from "@/lib/numbers"
 import useToastTransaction from "@/lib/hooks/useToastTransaction"
 import useConnectedAddress from "@/lib/hooks/useConnectedAddress"
 
 import Button from "@/components/Button"
+import TooltipEarnings from "@/components/TooltipEarnings"
 import InputNumber from "./InputNumber"
 import Table, { Row } from "./Table"
 
@@ -77,7 +77,9 @@ function Withdraw({
         <Row title={`Balance/ ${yVault.symbol || "Token"}`}>
           {formatNumberUnits(balance, yVault.decimals)}
         </Row>
-        <Row title="Earned">{formatCurreny(formatUSDC(holderEarnings))}</Row>
+        <Row title="Earnings">
+          <TooltipEarnings earnings={formatUSDC(holderEarnings)} />
+        </Row>
         <Row title="Price">${tokenPriceUSD}</Row>
       </Table>
       <Button type="submit" fontSize="text-xl">
