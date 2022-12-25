@@ -15,6 +15,7 @@ export type YDaemonVault = {
   version: string
   display_name: string
   icon: string
+  type: "Automated" | "Standard" | "Experimental"
   tvl: {
     total_assets: number
     price: number
