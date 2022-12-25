@@ -9,6 +9,10 @@ export const ADDRESS_CMIM = "0x5a6A4D54456819380173272A5E8E9B9904BdF41B"
 export const ADDRESS_CLUSD = "0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA"
 export const ADDRESS_CGUSD = "0xD2967f45c4f384DEEa880F807Be904762a3DeA07"
 
+/**
+ * List of supported assets
+ * NOTE: Compare against `toLowerCase`
+ */
 export const SUPPORTED_ASSETS = [
   ADDRESS_USDC,
   ADDRESS_USDT,
@@ -18,7 +22,7 @@ export const SUPPORTED_ASSETS = [
   ADDRESS_CMIM,
   ADDRESS_CLUSD,
   ADDRESS_CGUSD,
-]
+].map((address) => address.toLowerCase())
 
 export const ALCHEMY_API_KEY = "ZMsNIuwyQN517NmglFm4NAJKzPTpEUTM"
 export const ALCHEMY_URL =
