@@ -11,9 +11,10 @@ export async function getAllVaults() {
 
     vaults = vaults
       .filter(
-        (vault) =>
-          vault.apy.type !== "error" &&
-          SUPPORTED_ASSETS.includes(vault.token.address)
+        ({ apy, token, type: vaultType }) =>
+          apy.type !== "error" &&
+          vaultType === "Standard" &&
+          SUPPORTED_ASSETS.includes(token.address.toLowerCase())
       )
       .map((vault) => {
         // search for icon(url) under token.icon else append default url
